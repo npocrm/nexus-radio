@@ -460,6 +460,17 @@ body{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:500;color:var(
   border-color:var(--orn,#ff8c00); color:var(--bg1);
   background:var(--orn,#ff8c00); font-weight:bold;
 }
+.mb-preset-btn {
+  font-family:'Share Tech Mono',monospace; font-size:7px;
+  padding:3px 9px; border:1px solid var(--brd);
+  background:var(--bg3); color:var(--t2); border-radius:3px;
+  cursor:pointer; transition:all .15s; letter-spacing:.3px;
+}
+.mb-preset-btn:hover { border-color:var(--grn); color:var(--grn); }
+.mb-preset-btn.on {
+  border-color:var(--grn); color:var(--bg1);
+  background:var(--grn); font-weight:bold;
+}
 }
 
 
@@ -1544,6 +1555,82 @@ function installPWA() {
         </div>
         <div style="font-size:7px;color:var(--t3);font-family:var(--fmono);margin-top:6px">
           &#9432; The exciter adds harmonic overtones via waveshaper saturation + high-shelf boost. Higher DRIVE = more harmonics. Higher BLEND = louder presence. Start with <em>Subtle</em> or <em>Bright</em> for broadcast.
+        </div>
+      </div>
+
+      <!-- ── 4-BAND MULTIBAND COMPRESSOR ── -->
+      <div style="margin-top:10px;padding:10px;background:var(--bg2);border-radius:6px;border:1px solid var(--brd)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <label class="gs-toggle-lbl" style="gap:7px">
+            <input type="checkbox" id="dsp-mb" onchange="saveMBFromDOM()" style="accent-color:var(--grn)">
+            <span style="font-family:var(--fmono);font-size:9px;color:var(--grn);letter-spacing:1px">&#9889; 4-BAND MULTIBAND COMPRESSOR</span>
+          </label>
+          <span style="font-size:7.5px;color:var(--t3);font-family:var(--fmono)">Independent compression per frequency band · Transparent, professional loudness control</span>
+        </div>
+
+        <!-- Presets -->
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;align-items:center">
+          <span style="font-size:7.5px;color:var(--t3);font-family:var(--fmono);margin-right:4px">PRESET:</span>
+          <button class="mb-preset-btn mbtn" style="font-size:7px;padding:3px 9px;border-color:var(--t3)" data-preset="off"       onclick="applyMBPreset('off')">&#8864; Off</button>
+          <button class="mb-preset-btn mbtn" style="font-size:7px;padding:3px 9px" data-preset="broadcast" onclick="applyMBPreset('broadcast')">&#128245; Broadcast</button>
+          <button class="mb-preset-btn mbtn" style="font-size:7px;padding:3px 9px" data-preset="music"     onclick="applyMBPreset('music')">&#127925; Music</button>
+          <button class="mb-preset-btn mbtn" style="font-size:7px;padding:3px 9px" data-preset="podcast"   onclick="applyMBPreset('podcast')">&#127908; Podcast</button>
+          <button class="mb-preset-btn mbtn" style="font-size:7px;padding:3px 9px;border-color:var(--orn,#ff8c00);color:var(--orn,#ff8c00)" data-preset="loud" onclick="applyMBPreset('loud')">&#128293; Loud &amp; Proud</button>
+          <button class="mb-preset-btn mbtn" style="font-size:7px;padding:3px 9px;border-color:var(--cyn)" data-preset="gentle"   onclick="applyMBPreset('gentle')">&#9729; Gentle</button>
+        </div>
+
+        <!-- Band headers -->
+        <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr 1fr 1fr;gap:4px;margin-bottom:4px">
+          <div style="font-size:7px;color:var(--t3);font-family:var(--fmono)"></div>
+          <div style="font-size:7px;color:var(--t3);font-family:var(--fmono);text-align:center">THRESHOLD<br>(dB)</div>
+          <div style="font-size:7px;color:var(--t3);font-family:var(--fmono);text-align:center">RATIO<br>(:1)</div>
+          <div style="font-size:7px;color:var(--t3);font-family:var(--fmono);text-align:center">ATTACK<br>(sec)</div>
+          <div style="font-size:7px;color:var(--t3);font-family:var(--fmono);text-align:center">RELEASE<br>(sec)</div>
+          <div style="font-size:7px;color:var(--t3);font-family:var(--fmono);text-align:center">MAKEUP<br>(dB)</div>
+        </div>
+
+        <!-- Band 0: Sub/Low -->
+        <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr 1fr 1fr;gap:4px;margin-bottom:4px;align-items:center">
+          <div style="font-size:8px;color:#64b5f6;font-family:var(--fmono);font-weight:bold">&#9660; SUB / LOW<br><span style="font-size:6.5px;color:var(--t3)">20–200 Hz</span></div>
+          <input class="minput" id="mb-b0-thr"     type="number" min="-60" max="0"   value="-24"  step="1"    onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b0-ratio"   type="number" min="1"  max="20"  value="4"    step="0.5"  onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b0-attack"  type="number" min="0.001" max="1" value="0.005" step="0.001" onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b0-release" type="number" min="0.01"  max="2" value="0.200" step="0.01"  onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b0-gain"    type="number" min="-12" max="12"  value="3"    step="0.5"  onchange="saveMBFromDOM()">
+        </div>
+
+        <!-- Band 1: Low-Mid -->
+        <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr 1fr 1fr;gap:4px;margin-bottom:4px;align-items:center">
+          <div style="font-size:8px;color:#81c784;font-family:var(--fmono);font-weight:bold">&#9660; LOW-MID<br><span style="font-size:6.5px;color:var(--t3)">200Hz–2kHz</span></div>
+          <input class="minput" id="mb-b1-thr"     type="number" min="-60" max="0"   value="-22"  step="1"    onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b1-ratio"   type="number" min="1"  max="20"  value="3"    step="0.5"  onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b1-attack"  type="number" min="0.001" max="1" value="0.008" step="0.001" onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b1-release" type="number" min="0.01"  max="2" value="0.180" step="0.01"  onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b1-gain"    type="number" min="-12" max="12"  value="2"    step="0.5"  onchange="saveMBFromDOM()">
+        </div>
+
+        <!-- Band 2: High-Mid -->
+        <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr 1fr 1fr;gap:4px;margin-bottom:4px;align-items:center">
+          <div style="font-size:8px;color:#ffb74d;font-family:var(--fmono);font-weight:bold">&#9650; HIGH-MID<br><span style="font-size:6.5px;color:var(--t3)">2kHz–8kHz</span></div>
+          <input class="minput" id="mb-b2-thr"     type="number" min="-60" max="0"   value="-20"  step="1"    onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b2-ratio"   type="number" min="1"  max="20"  value="3"    step="0.5"  onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b2-attack"  type="number" min="0.001" max="1" value="0.006" step="0.001" onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b2-release" type="number" min="0.01"  max="2" value="0.150" step="0.01"  onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b2-gain"    type="number" min="-12" max="12"  value="2"    step="0.5"  onchange="saveMBFromDOM()">
+        </div>
+
+        <!-- Band 3: High -->
+        <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr 1fr 1fr;gap:4px;align-items:center">
+          <div style="font-size:8px;color:#f48fb1;font-family:var(--fmono);font-weight:bold">&#9650; HIGH / AIR<br><span style="font-size:6.5px;color:var(--t3)">8kHz–20kHz</span></div>
+          <input class="minput" id="mb-b3-thr"     type="number" min="-60" max="0"   value="-18"  step="1"    onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b3-ratio"   type="number" min="1"  max="20"  value="2"    step="0.5"  onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b3-attack"  type="number" min="0.001" max="1" value="0.003" step="0.001" onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b3-release" type="number" min="0.01"  max="2" value="0.100" step="0.01"  onchange="saveMBFromDOM()">
+          <input class="minput" id="mb-b3-gain"    type="number" min="-12" max="12"  value="4"    step="0.5"  onchange="saveMBFromDOM()">
+        </div>
+
+        <div style="font-size:7px;color:var(--t3);font-family:var(--fmono);margin-top:7px">
+          &#9432; Each band is compressed independently — bass pumping no longer affects treble. Makeup gain compensates for gain reduction. Start with <em>Broadcast</em> preset for professional results.
         </div>
       </div>
 
@@ -4138,7 +4225,9 @@ function saveGlobalRotation(){
 
 // DSP save/load
 function saveDSP(){
-  const g = id => document.getElementById(id);
+  const g   = id => document.getElementById(id);
+  const num = (id, def) => parseFloat(g(id)?.value) || def;
+  const prev = SETTINGS.dsp || {};
   SETTINGS.dsp = {
     normalizer:    g('dsp-normalizer')?.checked||false,
     eq:            g('dsp-eq')?.checked||false,
@@ -4146,14 +4235,21 @@ function saveDSP(){
     limiter:       g('dsp-limiter')?.checked||false,
     reverb:        g('dsp-reverb')?.checked||false,
     stereo:        g('dsp-stereo')?.checked||false,
-    eqLow:         parseFloat(g('dsp-eq-low')?.value)||0,
-    eqMid:         parseFloat(g('dsp-eq-mid')?.value)||0,
-    eqHigh:        parseFloat(g('dsp-eq-high')?.value)||0,
-    compThr:       parseFloat(g('dsp-comp-thr')?.value)||-20,
+    eqLow:         num('dsp-eq-low',   0),
+    eqMid:         num('dsp-eq-mid',   0),
+    eqHigh:        num('dsp-eq-high',  0),
+    compThr:       num('dsp-comp-thr', -20),
     exciter:       g('dsp-exciter')?.checked||false,
-    exciterDrive:  parseFloat(g('exciter-drive')?.value)||0.4,
-    exciterBlend:  parseFloat(g('exciter-blend')?.value)||0.35,
-    exciterPreset: SETTINGS.dsp?.exciterPreset||'subtle',
+    exciterDrive:  num('exciter-drive', 0.4),
+    exciterBlend:  num('exciter-blend', 0.35),
+    exciterPreset: prev.exciterPreset||'subtle',
+    // Multiband (read from DOM if available, else keep previous)
+    mbEnabled: g('dsp-mb')?.checked || false,
+    mbPreset:  prev.mbPreset || 'broadcast',
+    mb0: prev.mb0 || MB_PRESETS.broadcast.b0,
+    mb1: prev.mb1 || MB_PRESETS.broadcast.b1,
+    mb2: prev.mb2 || MB_PRESETS.broadcast.b2,
+    mb3: prev.mb3 || MB_PRESETS.broadcast.b3,
   };
   saveSettings();
   applyDSP();
@@ -4182,6 +4278,17 @@ function loadDSP(){
   // Highlight saved EQ preset (find best match)
   const eqMatch = Object.entries(EQ_PRESETS).find(([k,p])=>p.low===(d.eqLow||0)&&p.mid===(d.eqMid||0)&&p.high===(d.eqHigh||0));
   document.querySelectorAll('.eq-preset-btn').forEach(b => b.classList.toggle('on', eqMatch && b.dataset.preset===eqMatch[0]));
+  // Multiband compressor
+  const setChk = (id, v) => { const el = document.getElementById(id); if(el) el.checked = v; };
+  setChk('dsp-mb', d.mbEnabled || false);
+  [0,1,2,3].forEach(i => {
+    const cfg = d['mb'+i] || MB_PRESETS.broadcast['b'+i] || {};
+    _syncMBBandDOM(i, cfg);
+  });
+  // Highlight active MB preset
+  const mbp = d.mbPreset || 'broadcast';
+  document.querySelectorAll('.mb-preset-btn').forEach(b => b.classList.toggle('on', b.dataset.preset === mbp));
+
   // Sync range slider display labels
   const syncLabel = (inputId, spanId, digits) => {
     const el = document.getElementById(inputId);
@@ -4202,19 +4309,38 @@ function loadDSP(){
 //  Graph: GN.A ──► DSP_IN_GN ──► [eq → comp → limiter → exciter] ──► MGN.n
 // ═══════════════════════════════════════════════════════════════
 let DSP = {
-  inGN: null,          // entry gain (replaces direct GN.A → MGN connection)
+  inGN: null,          // entry gain — all sources feed here
   eqLow: null,         // BiquadFilter lowShelf
   eqMid: null,         // BiquadFilter peaking
   eqHigh: null,        // BiquadFilter highShelf
-  comp: null,          // DynamicsCompressor
-  limiter: null,       // DynamicsCompressor (hard limiter)
-  exciterHP: null,     // BiquadFilter highpass (feed for exciter)
+  comp: null,          // broadband DynamicsCompressor
+  limiter: null,       // DynamicsCompressor hard limiter
+  exciterHP: null,     // BiquadFilter highpass (exciter feed)
   exciterWS: null,     // WaveShaper (harmonic saturation)
-  exciterHShelf: null, // BiquadFilter high-shelf (adds air)
-  exciterGN: null,     // Gain (exciter blend level)
-  exciterInGN: null,   // Gain (exciter input level / drive)
-  outGN: null,         // final gain before MGN
+  exciterHShelf: null, // BiquadFilter high-shelf (air)
+  exciterGN: null,     // Gain (exciter blend)
+  exciterInGN: null,   // Gain (exciter drive)
+  outGN: null,         // final gain → MGN
   built: false,
+
+  // ── MULTIBAND COMPRESSOR (4 bands) ──────────────────────────
+  // Each band: LP/HP crossover filters → compressor → makeup gain
+  // Bands recombine at mbSumGN → feeds into existing comp/limiter chain
+  mb: {
+    enabled: false,
+    // Band 0: Sub/Low   20 Hz – 200 Hz
+    b0: { lpf:null, comp:null, makeupGN:null },
+    // Band 1: Low-Mid  200 Hz – 2 kHz
+    b1: { lpf:null, hpf:null, comp:null, makeupGN:null },
+    // Band 2: High-Mid  2 kHz – 8 kHz
+    b2: { lpf:null, hpf:null, comp:null, makeupGN:null },
+    // Band 3: High      8 kHz – 20 kHz
+    b3: { hpf:null, comp:null, makeupGN:null },
+    // Sum node — all 4 bands merge here
+    sumGN: null,
+    // Bypass gain — used when MB is off (inGN → bypassGN → eqLow)
+    bypassGN: null,
+  },
 };
 
 // EQ PRESETS — professional broadcast curves
@@ -4240,6 +4366,63 @@ const EXCITER_PRESETS = {
 };
 
 // Build a waveshaper curve for the exciter (soft-clip saturation)
+// ── MULTIBAND COMPRESSOR PRESETS ─────────────────────────────
+// Each band: { thr, ratio, attack, release, gain }
+// thr = threshold dB | ratio = compression ratio | gain = makeup gain dB
+const MB_PRESETS = {
+  'off': {
+    label: '⊟ Off',
+    enabled: false,
+    b0: { thr:-60, ratio:1,  attack:0.010, release:0.150, gain:0  },
+    b1: { thr:-60, ratio:1,  attack:0.010, release:0.150, gain:0  },
+    b2: { thr:-60, ratio:1,  attack:0.010, release:0.150, gain:0  },
+    b3: { thr:-60, ratio:1,  attack:0.010, release:0.150, gain:0  },
+  },
+  'broadcast': {
+    label: '📡 Broadcast',
+    enabled: true,
+    b0: { thr:-24, ratio:4,  attack:0.005, release:0.200, gain:3  },
+    b1: { thr:-22, ratio:3,  attack:0.008, release:0.180, gain:2  },
+    b2: { thr:-20, ratio:3,  attack:0.006, release:0.150, gain:2  },
+    b3: { thr:-18, ratio:2,  attack:0.003, release:0.100, gain:4  },
+  },
+  'music': {
+    label: '🎵 Music',
+    enabled: true,
+    b0: { thr:-20, ratio:3,  attack:0.010, release:0.300, gain:2  },
+    b1: { thr:-18, ratio:2,  attack:0.015, release:0.250, gain:1  },
+    b2: { thr:-22, ratio:3,  attack:0.008, release:0.200, gain:2  },
+    b3: { thr:-16, ratio:2,  attack:0.003, release:0.120, gain:3  },
+  },
+  'podcast': {
+    label: '🎙 Podcast',
+    enabled: true,
+    b0: { thr:-28, ratio:5,  attack:0.003, release:0.150, gain:1  },
+    b1: { thr:-18, ratio:4,  attack:0.005, release:0.120, gain:4  },
+    b2: { thr:-16, ratio:4,  attack:0.004, release:0.100, gain:5  },
+    b3: { thr:-20, ratio:2,  attack:0.003, release:0.080, gain:2  },
+  },
+  'loud': {
+    label: '🔥 Loud & Proud',
+    enabled: true,
+    b0: { thr:-16, ratio:6,  attack:0.003, release:0.120, gain:5  },
+    b1: { thr:-14, ratio:5,  attack:0.005, release:0.100, gain:5  },
+    b2: { thr:-14, ratio:5,  attack:0.004, release:0.080, gain:6  },
+    b3: { thr:-12, ratio:3,  attack:0.002, release:0.060, gain:7  },
+  },
+  'gentle': {
+    label: '☁ Gentle',
+    enabled: true,
+    b0: { thr:-30, ratio:2,  attack:0.020, release:0.400, gain:1  },
+    b1: { thr:-28, ratio:2,  attack:0.020, release:0.350, gain:1  },
+    b2: { thr:-26, ratio:2,  attack:0.015, release:0.300, gain:1  },
+    b3: { thr:-24, ratio:1.5,attack:0.010, release:0.200, gain:2  },
+  },
+};
+
+// Crossover frequencies for the 4 bands
+const MB_XOVER = { low: 200, mid: 2000, high: 8000 };
+
 function _makeExciterCurve(amount) {
   const n = 256, curve = new Float32Array(n);
   const k = amount * 80 + 1;
@@ -4255,19 +4438,66 @@ function buildDSPGraph() {
   if (DSP.built) return;
   const d = SETTINGS.dsp || {};
 
-  // 1. Entry gain — all music sources reconnect here instead of directly to MGN
+  // ── 1. Entry gain ────────────────────────────────────────────
   DSP.inGN = ctx.createGain();
   DSP.inGN.gain.value = 1.0;
 
-  // 2. Three-band EQ
-  DSP.eqLow = ctx.createBiquadFilter();
-  DSP.eqLow.type = 'lowshelf';  DSP.eqLow.frequency.value = 200;
-  DSP.eqMid = ctx.createBiquadFilter();
-  DSP.eqMid.type = 'peaking';   DSP.eqMid.frequency.value = 1000; DSP.eqMid.Q.value = 0.8;
+  // ── 2. MULTIBAND COMPRESSOR (4 bands, crossover split+sum) ──
+  // Topology: inGN → [4 parallel crossover paths] → mbSumGN → eqLow
+  //   Band 0 (Sub/Low   20–200 Hz):   LPF(200)  → comp → makeupGN ─┐
+  //   Band 1 (Low-Mid 200–2000 Hz):  HPF(200)+LPF(2k)→ comp → mkGN ─┤→ sumGN
+  //   Band 2 (Hi-Mid  2k–8kHz):      HPF(2k)+LPF(8k) → comp → mkGN ─┤
+  //   Band 3 (High    8k–20kHz):     HPF(8k)   → comp → makeupGN ─┘
+  const mb = DSP.mb;
+
+  mb.sumGN    = ctx.createGain(); mb.sumGN.gain.value    = 0.5; // prevent summing overload
+  mb.bypassGN = ctx.createGain(); mb.bypassGN.gain.value = 1.0;
+
+  function _makeBand(hpFreq, lpFreq) {
+    const band = {};
+    if (lpFreq) {
+      band.lpf = ctx.createBiquadFilter();
+      band.lpf.type = 'lowpass'; band.lpf.frequency.value = lpFreq; band.lpf.Q.value = 0.5;
+    }
+    if (hpFreq) {
+      band.hpf = ctx.createBiquadFilter();
+      band.hpf.type = 'highpass'; band.hpf.frequency.value = hpFreq; band.hpf.Q.value = 0.5;
+    }
+    band.comp = ctx.createDynamicsCompressor();
+    band.comp.knee.value    = 6;
+    band.comp.attack.value  = 0.008;
+    band.comp.release.value = 0.150;
+    band.makeupGN = ctx.createGain(); band.makeupGN.gain.value = 1.0;
+    return band;
+  }
+
+  mb.b0 = _makeBand(null,  MB_XOVER.low);
+  mb.b1 = _makeBand(MB_XOVER.low,  MB_XOVER.mid);
+  mb.b2 = _makeBand(MB_XOVER.mid,  MB_XOVER.high);
+  mb.b3 = _makeBand(MB_XOVER.high, null);
+
+  // Wire each band: inGN → [hpf →] [lpf →] comp → makeupGN → sumGN
+  [mb.b0, mb.b1, mb.b2, mb.b3].forEach(band => {
+    let node = DSP.inGN;
+    if (band.hpf) { node.connect(band.hpf); node = band.hpf; }
+    if (band.lpf) { node.connect(band.lpf); node = band.lpf; }
+    node.connect(band.comp);
+    band.comp.connect(band.makeupGN);
+    band.makeupGN.connect(mb.sumGN);
+  });
+
+  // Bypass path: inGN → bypassGN → (connected to eqLow when MB off)
+  DSP.inGN.connect(mb.bypassGN);
+
+  // ── 3. Three-band EQ ─────────────────────────────────────────
+  DSP.eqLow  = ctx.createBiquadFilter();
+  DSP.eqLow.type  = 'lowshelf';  DSP.eqLow.frequency.value  = 200;
+  DSP.eqMid  = ctx.createBiquadFilter();
+  DSP.eqMid.type  = 'peaking';   DSP.eqMid.frequency.value  = 1000; DSP.eqMid.Q.value = 0.8;
   DSP.eqHigh = ctx.createBiquadFilter();
   DSP.eqHigh.type = 'highshelf'; DSP.eqHigh.frequency.value = 6000;
 
-  // 3. Dynamics compressor
+  // ── 4. Broadband compressor ──────────────────────────────────
   DSP.comp = ctx.createDynamicsCompressor();
   DSP.comp.threshold.value = d.compThr || -20;
   DSP.comp.knee.value      = 10;
@@ -4275,7 +4505,7 @@ function buildDSPGraph() {
   DSP.comp.attack.value    = 0.003;
   DSP.comp.release.value   = 0.25;
 
-  // 4. Hard limiter (brickwall)
+  // ── 5. Hard limiter (brickwall) ──────────────────────────────
   DSP.limiter = ctx.createDynamicsCompressor();
   DSP.limiter.threshold.value = -1;
   DSP.limiter.knee.value      = 0;
@@ -4283,23 +4513,27 @@ function buildDSPGraph() {
   DSP.limiter.attack.value    = 0.001;
   DSP.limiter.release.value   = 0.1;
 
-  // 5. Exciter chain (parallel path)
-  DSP.exciterHP   = ctx.createBiquadFilter();
+  // ── 6. Exciter (parallel path after EQ) ─────────────────────
+  DSP.exciterHP    = ctx.createBiquadFilter();
   DSP.exciterHP.type = 'highpass'; DSP.exciterHP.frequency.value = 3500; DSP.exciterHP.Q.value = 0.5;
-  DSP.exciterInGN = ctx.createGain(); DSP.exciterInGN.gain.value = d.exciterDrive || 0.4;
-  DSP.exciterWS   = ctx.createWaveShaper();
-  DSP.exciterWS.curve   = _makeExciterCurve(d.exciterDrive || 0.4);
+  DSP.exciterInGN  = ctx.createGain(); DSP.exciterInGN.gain.value = d.exciterDrive || 0.4;
+  DSP.exciterWS    = ctx.createWaveShaper();
+  DSP.exciterWS.curve      = _makeExciterCurve(d.exciterDrive || 0.4);
   DSP.exciterWS.oversample = '4x';
   DSP.exciterHShelf = ctx.createBiquadFilter();
   DSP.exciterHShelf.type = 'highshelf'; DSP.exciterHShelf.frequency.value = 7000; DSP.exciterHShelf.gain.value = 5;
-  DSP.exciterGN   = ctx.createGain(); DSP.exciterGN.gain.value = d.exciter ? (d.exciterBlend || 0.35) : 0;
+  DSP.exciterGN    = ctx.createGain(); DSP.exciterGN.gain.value = d.exciter ? (d.exciterBlend || 0.35) : 0;
 
-  // 6. Output gain
-  DSP.outGN = ctx.createGain();
-  DSP.outGN.gain.value = 0.95;
+  // ── 7. Output gain ───────────────────────────────────────────
+  DSP.outGN = ctx.createGain(); DSP.outGN.gain.value = 0.95;
 
-  // Wire the main chain: inGN → eq → comp → limiter → outGN → MGN
-  DSP.inGN.connect(DSP.eqLow);
+  // ── WIRE MAIN CHAIN ──────────────────────────────────────────
+  // MB active:   inGN → bands → sumGN → eqLow → ... → outGN → MGN
+  // MB bypassed: inGN → bypassGN → eqLow → ... → outGN → MGN
+  // Both paths connect to eqLow — routing toggled by applyDSP
+  mb.sumGN.connect(DSP.eqLow);
+  mb.bypassGN.connect(DSP.eqLow);
+
   DSP.eqLow.connect(DSP.eqMid);
   DSP.eqMid.connect(DSP.eqHigh);
   DSP.eqHigh.connect(DSP.comp);
@@ -4307,7 +4541,7 @@ function buildDSPGraph() {
   DSP.limiter.connect(DSP.outGN);
   DSP.outGN.connect(MGN.n);
 
-  // Wire exciter parallel path: eqHigh → exciterHP → inGN → WS → HShelf → exciterGN → outGN
+  // Exciter parallel: eqHigh → HP → drive → WS → shelf → blend → outGN
   DSP.eqHigh.connect(DSP.exciterHP);
   DSP.exciterHP.connect(DSP.exciterInGN);
   DSP.exciterInGN.connect(DSP.exciterWS);
@@ -4316,9 +4550,7 @@ function buildDSPGraph() {
   DSP.exciterGN.connect(DSP.outGN);
 
   DSP.built = true;
-  log('DSP','Audio graph built — EQ + Comp + Limiter + Exciter ready');
-
-  // Reconnect audio source gains into DSP chain (was going direct to MGN)
+  log('DSP','Audio graph built — MB Comp + EQ + Broadband Comp + Limiter + Exciter ready');
   _reconnectSourcesToDSP();
 }
 
@@ -4340,13 +4572,40 @@ function applyDSP() {
   const d = SETTINGS.dsp || {};
   if (!DSP.built) { buildDSPGraph(); return; }
 
-  // EQ
+  // ── MULTIBAND COMPRESSOR ─────────────────────────────────────
+  const mb = DSP.mb;
+  const mbEnabled = d.mbEnabled === true;
+  mb.enabled = mbEnabled;
+
+  // Route signal: MB active → sumGN has signal; bypass → bypassGN has signal
+  // We control this by muting the unused path via gain
+  mb.sumGN.gain.value    = mbEnabled ? 0.5 : 0;
+  mb.bypassGN.gain.value = mbEnabled ? 0   : 1.0;
+
+  if (mbEnabled) {
+    const bands = [
+      { band: mb.b0, cfg: d.mb0 || {} },
+      { band: mb.b1, cfg: d.mb1 || {} },
+      { band: mb.b2, cfg: d.mb2 || {} },
+      { band: mb.b3, cfg: d.mb3 || {} },
+    ];
+    bands.forEach(({ band, cfg }) => {
+      band.comp.threshold.value = cfg.thr     !== undefined ? cfg.thr     : -20;
+      band.comp.ratio.value     = cfg.ratio   !== undefined ? cfg.ratio   : 3;
+      band.comp.attack.value    = cfg.attack  !== undefined ? cfg.attack  : 0.008;
+      band.comp.release.value   = cfg.release !== undefined ? cfg.release : 0.150;
+      // Makeup gain: convert dB to linear
+      band.makeupGN.gain.value  = cfg.gain    !== undefined ? Math.pow(10, cfg.gain / 20) : 1.0;
+    });
+  }
+
+  // ── THREE-BAND EQ ────────────────────────────────────────────
   const eqActive = d.eq !== false;
   DSP.eqLow.gain.value  = eqActive ? (d.eqLow  || 0) : 0;
   DSP.eqMid.gain.value  = eqActive ? (d.eqMid  || 0) : 0;
   DSP.eqHigh.gain.value = eqActive ? (d.eqHigh || 0) : 0;
 
-  // Compressor — bypass by setting ratio=1 and threshold=0
+  // ── BROADBAND COMPRESSOR ─────────────────────────────────────
   if (d.comp !== false) {
     DSP.comp.threshold.value = d.compThr || -20;
     DSP.comp.ratio.value     = 4;
@@ -4355,18 +4614,75 @@ function applyDSP() {
     DSP.comp.ratio.value     = 1;
   }
 
-  // Limiter
+  // ── LIMITER ──────────────────────────────────────────────────
   DSP.limiter.threshold.value = (d.limiter !== false) ? -1 : 0;
   DSP.limiter.ratio.value     = (d.limiter !== false) ? 20 : 1;
 
-  // Exciter
+  // ── EXCITER ──────────────────────────────────────────────────
   const drive = d.exciterDrive || 0.4;
   const blend = d.exciter ? (d.exciterBlend || 0.35) : 0;
-  DSP.exciterInGN.gain.value   = drive;
-  DSP.exciterWS.curve          = _makeExciterCurve(drive);
-  DSP.exciterGN.gain.value     = blend;
+  DSP.exciterInGN.gain.value = drive;
+  DSP.exciterWS.curve        = _makeExciterCurve(drive);
+  DSP.exciterGN.gain.value   = blend;
 
-  log('DSP','Applied: EQ='+eqActive+' Comp='+d.comp+' Lim='+d.limiter+' Exciter='+d.exciter+' drive='+drive+' blend='+blend);
+  log('DSP','Applied: MB='+mbEnabled+' EQ='+eqActive+' Comp='+d.comp+' Lim='+d.limiter+' Exciter='+d.exciter);
+}
+
+// Apply a complete MB preset (all 4 bands at once)
+function applyMBPreset(presetKey) {
+  const preset = MB_PRESETS[presetKey];
+  if (!preset) return;
+  const d = SETTINGS.dsp;
+  d.mbPreset  = presetKey;
+  d.mbEnabled = preset.enabled;
+  d.mb0 = { ...preset.b0 };
+  d.mb1 = { ...preset.b1 };
+  d.mb2 = { ...preset.b2 };
+  d.mb3 = { ...preset.b3 };
+  // Sync DOM
+  const setChk = (id, v) => { const el = document.getElementById(id); if(el) el.checked = v; };
+  setChk('dsp-mb', preset.enabled);
+  _syncMBBandDOM(0, d.mb0);
+  _syncMBBandDOM(1, d.mb1);
+  _syncMBBandDOM(2, d.mb2);
+  _syncMBBandDOM(3, d.mb3);
+  applyDSP();
+  saveSettings();
+  document.querySelectorAll('.mb-preset-btn').forEach(b => b.classList.toggle('on', b.dataset.preset === presetKey));
+  toast('MB: '+preset.label, 's');
+  log('DSP','MB preset: '+preset.label);
+}
+
+// Sync DOM for one band (called when loading settings or applying preset)
+function _syncMBBandDOM(bandIdx, cfg) {
+  const set = (id, v) => { const el = document.getElementById(id); if(el) el.value = v; };
+  const b = 'mb-b'+bandIdx+'-';
+  set(b+'thr',     cfg.thr     !== undefined ? cfg.thr     : -20);
+  set(b+'ratio',   cfg.ratio   !== undefined ? cfg.ratio   : 3);
+  set(b+'attack',  cfg.attack  !== undefined ? cfg.attack  : 0.008);
+  set(b+'release', cfg.release !== undefined ? cfg.release : 0.150);
+  set(b+'gain',    cfg.gain    !== undefined ? cfg.gain    : 0);
+}
+
+// Save MB settings from DOM into SETTINGS.dsp
+function saveMBFromDOM() {
+  const g   = id => document.getElementById(id);
+  const num = (id, def) => parseFloat(g(id)?.value) || def;
+  const d   = SETTINGS.dsp;
+  d.mbEnabled = g('dsp-mb')?.checked || false;
+  [0,1,2,3].forEach(i => {
+    const b = 'mb-b'+i+'-';
+    d['mb'+i] = {
+      thr:     num(b+'thr',     -20),
+      ratio:   num(b+'ratio',   3),
+      attack:  num(b+'attack',  0.008),
+      release: num(b+'release', 0.150),
+      gain:    num(b+'gain',    0),
+    };
+  });
+  applyDSP();
+  saveSettings();
+  document.querySelectorAll('.mb-preset-btn').forEach(b => b.classList.remove('on'));
 }
 
 // Patch _mkOvAel and _mkIntrAel so new audio elements route through DSP
