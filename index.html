@@ -471,6 +471,71 @@ body{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:500;color:var(
   border-color:var(--grn); color:var(--bg1);
   background:var(--grn); font-weight:bold;
 }
+
+/* ── DSP PANEL SYSTEM ── */
+.dsp-panel {
+  margin-top:8px; border-radius:6px;
+  border:1px solid var(--brd); overflow:hidden;
+  background:var(--bg2);
+}
+.dsp-panel-hdr {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:7px 10px; background:rgba(0,0,0,.25);
+  border-bottom:1px solid var(--brd); gap:8px; flex-wrap:wrap; min-height:36px;
+}
+.dsp-panel-title {
+  font-family:'Share Tech Mono',monospace; font-size:9px;
+  letter-spacing:.8px; font-weight:bold;
+}
+.dsp-panel-body { padding:10px; }
+.dsp-tog-btn {
+  font-family:'Share Tech Mono',monospace; font-size:8px;
+  padding:3px 10px; border-radius:20px; border:2px solid var(--red,#ff4444);
+  background:transparent; color:var(--red,#ff4444);
+  cursor:pointer; transition:all .2s; letter-spacing:.5px; font-weight:bold;
+  flex-shrink:0; min-width:42px; text-align:center;
+}
+.dsp-tog-btn.on {
+  border-color:var(--grn); color:var(--bg1);
+  background:var(--grn); box-shadow:0 0 8px rgba(0,255,136,.4);
+}
+.dsp-col-hdr {
+  font-size:6.5px; color:var(--t3); font-family:'Share Tech Mono',monospace;
+  text-align:center; line-height:1.3;
+}
+.dsp-band-lbl {
+  font-size:7.5px; font-family:'Share Tech Mono',monospace; font-weight:bold; line-height:1.4;
+}
+.dsp-vsep {
+  width:1px; height:16px; background:var(--brd); flex-shrink:0; margin:0 4px;
+}
+.dsp-chain-node {
+  font-family:'Share Tech Mono',monospace; font-size:8px; font-weight:bold;
+  letter-spacing:.5px; padding:2px 6px; border-radius:3px;
+  background:rgba(0,0,0,.3); border:1px solid rgba(255,255,255,.06);
+}
+.dsp-plugin-slot {
+  display:flex; align-items:center; gap:7px; flex-wrap:wrap;
+  margin-top:10px; padding:7px 10px; border-radius:4px;
+  border:1px dashed rgba(0,212,255,.25); background:rgba(0,212,255,.03);
+}
+.dsp-plugin-icon {
+  font-size:13px; color:var(--cyn); opacity:.5; flex-shrink:0;
+}
+.dsp-plugin-label {
+  font-family:'Share Tech Mono',monospace; font-size:7.5px;
+  color:var(--cyn); letter-spacing:.5px; opacity:.7;
+}
+.dsp-plugin-hint {
+  font-size:6.5px; color:var(--t3); font-family:'Share Tech Mono',monospace;
+  flex-basis:100%; margin-top:-4px;
+}
+.dsp-plugin-slot.loaded {
+  border-color:var(--grn); background:rgba(0,255,136,.05);
+}
+.dsp-plugin-slot.loaded .dsp-plugin-icon,
+.dsp-plugin-slot.loaded .dsp-plugin-label { opacity:1; color:var(--grn); }
+.dsp-user-sel { min-width:90px; }
 }
 
 
@@ -1460,179 +1525,336 @@ function installPWA() {
       </div>
 
       <div class="sec-hdr" style="margin:14px 0 10px">&#127925; DSP &amp; AUDIO PROCESSING</div>
-      <div style="font-size:8px;color:var(--t3);font-family:var(--fmono);margin-bottom:10px">Real-time Web Audio processing · All changes apply immediately during broadcast</div>
-
-      <!-- Processor Toggles -->
-      <div class="ov-type-grid" id="gs-dsp-grid" style="grid-template-columns:1fr 1fr 1fr">
-        <label class="gs-toggle-lbl gs-dsp-tog"><input type="checkbox" id="dsp-normalizer" onchange="saveDSP()"> &#128202; NORMALIZER<span style="display:block;font-size:7px;color:var(--t3);margin-top:2px">Auto volume leveling</span></label>
-        <label class="gs-toggle-lbl gs-dsp-tog"><input type="checkbox" id="dsp-eq" onchange="saveDSP()"> &#127925; MASTER EQ<span style="display:block;font-size:7px;color:var(--t3);margin-top:2px">3-band equalizer</span></label>
-        <label class="gs-toggle-lbl gs-dsp-tog"><input type="checkbox" id="dsp-comp" onchange="saveDSP()"> &#9889; COMPRESSOR<span style="display:block;font-size:7px;color:var(--t3);margin-top:2px">Dynamic range control</span></label>
-        <label class="gs-toggle-lbl gs-dsp-tog"><input type="checkbox" id="dsp-limiter" onchange="saveDSP()"> &#128737; LIMITER<span style="display:block;font-size:7px;color:var(--t3);margin-top:2px">Peak protection</span></label>
-        <label class="gs-toggle-lbl gs-dsp-tog"><input type="checkbox" id="dsp-reverb" onchange="saveDSP()"> &#126; REVERB<span style="display:block;font-size:7px;color:var(--t3);margin-top:2px">Room ambience</span></label>
-        <label class="gs-toggle-lbl gs-dsp-tog"><input type="checkbox" id="dsp-stereo" onchange="saveDSP()"> &#8596; STEREO EXP<span style="display:block;font-size:7px;color:var(--t3);margin-top:2px">Width enhancement</span></label>
+      <div style="font-size:8px;color:var(--t3);font-family:var(--fmono);margin-bottom:12px">
+        Professional broadcast signal chain · Real-time Web Audio · Toggle each processor independently
       </div>
 
-      <!-- ── MASTER EQ ── -->
-      <div style="margin-top:12px;padding:10px;background:var(--bg2);border-radius:6px;border:1px solid var(--brd)">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <span style="font-family:var(--fmono);font-size:9px;color:var(--cyn);letter-spacing:1px">&#127925; MASTER EQ — 3-BAND</span>
-          <div style="display:flex;gap:5px;flex-wrap:wrap">
-            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 7px" data-preset="flat"       onclick="applyEQPreset('flat')">Flat</button>
-            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 7px" data-preset="bass_boost" onclick="applyEQPreset('bass_boost')">Bass+</button>
-            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 7px" data-preset="vocal"      onclick="applyEQPreset('vocal')">Vocal</button>
-            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 7px" data-preset="air"        onclick="applyEQPreset('air')">Air</button>
-            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 7px" data-preset="warm"       onclick="applyEQPreset('warm')">Warm</button>
-            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 7px" data-preset="dance"      onclick="applyEQPreset('dance')">Dance</button>
-            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 7px" data-preset="speech"     onclick="applyEQPreset('speech')">Speech</button>
-            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 7px" data-preset="pop"        onclick="applyEQPreset('pop')">Pop</button>
+      <!-- ═══════════════════════════════════════════════════════
+           SIGNAL CHAIN LEGEND
+      ═══════════════════════════════════════════════════════ -->
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:14px;padding:7px 10px;background:var(--bg3);border-radius:5px;border:1px solid var(--brd);overflow-x:auto;white-space:nowrap">
+        <span style="font-size:7px;color:var(--t3);font-family:var(--fmono)">CHAIN:</span>
+        <span class="dsp-chain-node" style="color:#64b5f6">MB COMP</span>
+        <span style="color:var(--t3);font-size:9px">→</span>
+        <span class="dsp-chain-node" style="color:var(--cyn)">EQ</span>
+        <span style="color:var(--t3);font-size:9px">→</span>
+        <span class="dsp-chain-node" style="color:#81c784">COMPRESSOR</span>
+        <span style="color:var(--t3);font-size:9px">→</span>
+        <span class="dsp-chain-node" style="color:var(--orn,#ff8c00)">EXCITER</span>
+        <span style="color:var(--t3);font-size:9px">→</span>
+        <span class="dsp-chain-node" style="color:#f48fb1">STEREO</span>
+        <span style="color:var(--t3);font-size:9px">→</span>
+        <span class="dsp-chain-node" style="color:var(--red,#ff4444)">LIMITER</span>
+        <span style="color:var(--t3);font-size:10px;margin-left:4px">→ OUT</span>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════
+           1. 4-BAND MULTIBAND COMPRESSOR
+      ═══════════════════════════════════════════════════════ -->
+      <div class="dsp-panel" id="dsp-panel-mb">
+        <div class="dsp-panel-hdr">
+          <div style="display:flex;align-items:center;gap:8px">
+            <button class="dsp-tog-btn" id="dsp-tog-mb" onclick="dspToggle('mb')" title="Enable/Disable">OFF</button>
+            <span class="dsp-panel-title" style="color:#64b5f6">&#9660; 4-BAND MULTIBAND COMPRESSOR</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:5px">
+            <span style="font-size:7px;color:var(--t3);font-family:var(--fmono)">FACTORY:</span>
+            <button class="mb-preset-btn mbtn" style="font-size:7px;padding:2px 7px;border-color:var(--t3)" data-preset="off"       onclick="applyMBPreset('off')">Off</button>
+            <button class="mb-preset-btn mbtn" style="font-size:7px;padding:2px 7px" data-preset="broadcast" onclick="applyMBPreset('broadcast')">&#128245; Broadcast</button>
+            <button class="mb-preset-btn mbtn" style="font-size:7px;padding:2px 7px" data-preset="music"     onclick="applyMBPreset('music')">&#127925; Music</button>
+            <button class="mb-preset-btn mbtn" style="font-size:7px;padding:2px 7px" data-preset="podcast"   onclick="applyMBPreset('podcast')">&#127908; Podcast</button>
+            <button class="mb-preset-btn mbtn" style="font-size:7px;padding:2px 7px;color:var(--orn,#ff8c00);border-color:var(--orn,#ff8c00)" data-preset="loud"      onclick="applyMBPreset('loud')">&#128293; Loud</button>
+            <button class="mb-preset-btn mbtn" style="font-size:7px;padding:2px 7px;color:var(--cyn);border-color:var(--cyn)" data-preset="gentle"    onclick="applyMBPreset('gentle')">&#9729; Gentle</button>
+            <span class="dsp-vsep"></span>
+            <span style="font-size:7px;color:var(--t3);font-family:var(--fmono)">USER:</span>
+            <select class="msel dsp-user-sel" id="mb-user-sel" style="font-size:7px;padding:2px 5px;height:22px"></select>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px;color:var(--grn);border-color:var(--grn)" onclick="loadUserPreset('mb')">&#9654; Load</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px" onclick="saveUserPreset('mb')">&#9650; Save</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px;color:var(--red,#ff4444);border-color:var(--red,#ff4444)" onclick="deleteUserPreset('mb')">&#10005;</button>
           </div>
         </div>
-        <div class="mrow" style="gap:10px">
-          <div class="mfield" style="flex:1">
-            <label>LOW (dB) <span id="eq-low-val" style="color:var(--cyn)">0</span></label>
-            <input type="range" id="dsp-eq-low"  min="-12" max="12" value="0" step="0.5"
-              style="width:100%;accent-color:var(--cyn)"
-              oninput="document.getElementById('eq-low-val').textContent=this.value;saveDSP()">
+        <div class="dsp-panel-body">
+          <div style="display:grid;grid-template-columns:88px 1fr 1fr 1fr 1fr 1fr;gap:4px;margin-bottom:4px">
+            <div></div>
+            <div class="dsp-col-hdr">THR (dB)</div>
+            <div class="dsp-col-hdr">RATIO (:1)</div>
+            <div class="dsp-col-hdr">ATTACK (s)</div>
+            <div class="dsp-col-hdr">RELEASE (s)</div>
+            <div class="dsp-col-hdr">MAKEUP (dB)</div>
           </div>
-          <div class="mfield" style="flex:1">
-            <label>MID (dB) <span id="eq-mid-val" style="color:var(--ylw,#ffd700)">0</span></label>
-            <input type="range" id="dsp-eq-mid"  min="-12" max="12" value="0" step="0.5"
-              style="width:100%;accent-color:var(--ylw,#ffd700)"
-              oninput="document.getElementById('eq-mid-val').textContent=this.value;saveDSP()">
+          <div style="display:grid;grid-template-columns:88px 1fr 1fr 1fr 1fr 1fr;gap:4px;margin-bottom:3px;align-items:center">
+            <div class="dsp-band-lbl" style="color:#64b5f6">&#9660; SUB/LOW<br><span style="font-size:6px;color:var(--t3)">20–200 Hz</span></div>
+            <input class="minput" id="mb-b0-thr"     type="number" min="-60" max="0"    value="-24"  step="1"     onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b0-ratio"   type="number" min="1"   max="20"  value="4"    step="0.5"   onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b0-attack"  type="number" min="0.001" max="1" value="0.005" step="0.001" onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b0-release" type="number" min="0.01"  max="2" value="0.200" step="0.01"  onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b0-gain"    type="number" min="-12" max="12"   value="3"    step="0.5"   onchange="saveMBFromDOM()">
           </div>
-          <div class="mfield" style="flex:1">
-            <label>HIGH (dB) <span id="eq-high-val" style="color:var(--orn,#ff8c00)">0</span></label>
-            <input type="range" id="dsp-eq-high" min="-12" max="12" value="0" step="0.5"
-              style="width:100%;accent-color:var(--orn,#ff8c00)"
-              oninput="document.getElementById('eq-high-val').textContent=this.value;saveDSP()">
+          <div style="display:grid;grid-template-columns:88px 1fr 1fr 1fr 1fr 1fr;gap:4px;margin-bottom:3px;align-items:center">
+            <div class="dsp-band-lbl" style="color:#81c784">&#9660; LOW-MID<br><span style="font-size:6px;color:var(--t3)">200Hz–2kHz</span></div>
+            <input class="minput" id="mb-b1-thr"     type="number" min="-60" max="0"    value="-22"  step="1"     onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b1-ratio"   type="number" min="1"   max="20"  value="3"    step="0.5"   onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b1-attack"  type="number" min="0.001" max="1" value="0.008" step="0.001" onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b1-release" type="number" min="0.01"  max="2" value="0.180" step="0.01"  onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b1-gain"    type="number" min="-12" max="12"   value="2"    step="0.5"   onchange="saveMBFromDOM()">
           </div>
-          <div class="mfield" style="flex:0 0 110px">
-            <label>COMP THR (dB)</label>
-            <input class="minput" id="dsp-comp-thr" type="number" min="-40" max="0" value="-20" step="1" onchange="saveDSP()">
+          <div style="display:grid;grid-template-columns:88px 1fr 1fr 1fr 1fr 1fr;gap:4px;margin-bottom:3px;align-items:center">
+            <div class="dsp-band-lbl" style="color:#ffb74d">&#9650; HIGH-MID<br><span style="font-size:6px;color:var(--t3)">2kHz–8kHz</span></div>
+            <input class="minput" id="mb-b2-thr"     type="number" min="-60" max="0"    value="-20"  step="1"     onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b2-ratio"   type="number" min="1"   max="20"  value="3"    step="0.5"   onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b2-attack"  type="number" min="0.001" max="1" value="0.006" step="0.001" onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b2-release" type="number" min="0.01"  max="2" value="0.150" step="0.01"  onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b2-gain"    type="number" min="-12" max="12"   value="2"    step="0.5"   onchange="saveMBFromDOM()">
+          </div>
+          <div style="display:grid;grid-template-columns:88px 1fr 1fr 1fr 1fr 1fr;gap:4px;align-items:center">
+            <div class="dsp-band-lbl" style="color:#f48fb1">&#9650; HIGH/AIR<br><span style="font-size:6px;color:var(--t3)">8kHz–20kHz</span></div>
+            <input class="minput" id="mb-b3-thr"     type="number" min="-60" max="0"    value="-18"  step="1"     onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b3-ratio"   type="number" min="1"   max="20"  value="2"    step="0.5"   onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b3-attack"  type="number" min="0.001" max="1" value="0.003" step="0.001" onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b3-release" type="number" min="0.01"  max="2" value="0.100" step="0.01"  onchange="saveMBFromDOM()">
+            <input class="minput" id="mb-b3-gain"    type="number" min="-12" max="12"   value="4"    step="0.5"   onchange="saveMBFromDOM()">
+          </div>
+          <!-- Plugin slot -->
+          <div class="dsp-plugin-slot" id="slot-mb">
+            <span class="dsp-plugin-icon">&#9697;</span>
+            <span class="dsp-plugin-label">EXTERNAL MB COMPRESSOR PLUGIN SLOT</span>
+            <span class="dsp-plugin-hint">Load an AudioWorklet (.js) to replace built-in processing</span>
+            <input type="file" id="slot-mb-file" accept=".js" style="display:none" onchange="loadPluginSlot('mb',this)">
+            <button class="mbtn" style="font-size:7px;padding:2px 9px;margin-left:auto" onclick="document.getElementById('slot-mb-file').click()">&#43; Load Plugin</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 9px;color:var(--red,#ff4444);border-color:var(--red,#ff4444)" onclick="clearPluginSlot('mb')" id="slot-mb-clear" style="display:none">&#10005; Clear</button>
           </div>
         </div>
       </div>
 
-      <!-- ── PROFESSIONAL EXCITER ── -->
-      <div style="margin-top:10px;padding:10px;background:var(--bg2);border-radius:6px;border:1px solid var(--brd)">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <label class="gs-toggle-lbl" style="gap:7px">
-            <input type="checkbox" id="dsp-exciter" onchange="saveExciterManual()" style="accent-color:var(--orn,#ff8c00)">
-            <span style="font-family:var(--fmono);font-size:9px;color:var(--orn,#ff8c00);letter-spacing:1px">&#9889; PROFESSIONAL EXCITER</span>
-          </label>
-          <span style="font-size:7.5px;color:var(--t3);font-family:var(--fmono)">Adds harmonic saturation &amp; high-frequency sparkle for a louder, more powerful broadcast sound</span>
-        </div>
-
-        <!-- Presets row -->
-        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">
-          <span style="font-size:7.5px;color:var(--t3);font-family:var(--fmono);align-self:center;margin-right:4px">PRESET:</span>
-          <button class="exciter-preset-btn mbtn" style="font-size:7px;padding:3px 9px;border-color:var(--t3)" data-preset="off"     onclick="applyExciterPreset('off')">&#8864; Off</button>
-          <button class="exciter-preset-btn mbtn" style="font-size:7px;padding:3px 9px" data-preset="subtle"  onclick="applyExciterPreset('subtle')">✦ Subtle</button>
-          <button class="exciter-preset-btn mbtn" style="font-size:7px;padding:3px 9px" data-preset="bright"  onclick="applyExciterPreset('bright')">✦✦ Bright</button>
-          <button class="exciter-preset-btn mbtn" style="font-size:7px;padding:3px 9px" data-preset="punchy"  onclick="applyExciterPreset('punchy')">&#9889; Punchy</button>
-          <button class="exciter-preset-btn mbtn" style="font-size:7px;padding:3px 9px;border-color:var(--red);color:var(--red)" data-preset="on_air"  onclick="applyExciterPreset('on_air')">&#128245; On Air</button>
-          <button class="exciter-preset-btn mbtn" style="font-size:7px;padding:3px 9px;border-color:var(--orn,#ff8c00);color:var(--orn,#ff8c00)" data-preset="extreme" onclick="applyExciterPreset('extreme')">&#128293; Extreme</button>
-        </div>
-
-        <!-- Fine control sliders -->
-        <div class="mrow" style="gap:10px">
-          <div class="mfield" style="flex:1">
-            <label>DRIVE <span id="exc-drive-val" style="color:var(--orn,#ff8c00)">0.40</span>
-              <span style="color:var(--t3);font-size:7px">&nbsp;— harmonic saturation amount</span>
-            </label>
-            <input type="range" id="exciter-drive" min="0" max="1" value="0.4" step="0.01"
-              style="width:100%;accent-color:var(--orn,#ff8c00)"
-              oninput="document.getElementById('exc-drive-val').textContent=parseFloat(this.value).toFixed(2);saveExciterManual()">
+      <!-- ═══════════════════════════════════════════════════════
+           2. MASTER EQ
+      ═══════════════════════════════════════════════════════ -->
+      <div class="dsp-panel" id="dsp-panel-eq">
+        <div class="dsp-panel-hdr">
+          <div style="display:flex;align-items:center;gap:8px">
+            <button class="dsp-tog-btn" id="dsp-tog-eq" onclick="dspToggle('eq')" title="Enable/Disable">OFF</button>
+            <span class="dsp-panel-title" style="color:var(--cyn)">&#127925; MASTER EQ — 3-BAND</span>
           </div>
-          <div class="mfield" style="flex:1">
-            <label>BLEND <span id="exc-blend-val" style="color:var(--ylw,#ffd700)">0.35</span>
-              <span style="color:var(--t3);font-size:7px">&nbsp;— mix level with dry signal</span>
-            </label>
-            <input type="range" id="exciter-blend" min="0" max="1" value="0.35" step="0.01"
-              style="width:100%;accent-color:var(--ylw,#ffd700)"
-              oninput="document.getElementById('exc-blend-val').textContent=parseFloat(this.value).toFixed(2);saveExciterManual()">
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+            <span style="font-size:7px;color:var(--t3);font-family:var(--fmono)">FACTORY:</span>
+            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 6px" data-preset="flat"       onclick="applyEQPreset('flat')">Flat</button>
+            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 6px" data-preset="bass_boost" onclick="applyEQPreset('bass_boost')">Bass+</button>
+            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 6px" data-preset="vocal"      onclick="applyEQPreset('vocal')">Vocal</button>
+            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 6px" data-preset="air"        onclick="applyEQPreset('air')">Air</button>
+            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 6px" data-preset="warm"       onclick="applyEQPreset('warm')">Warm</button>
+            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 6px" data-preset="dance"      onclick="applyEQPreset('dance')">Dance</button>
+            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 6px" data-preset="speech"     onclick="applyEQPreset('speech')">Speech</button>
+            <button class="eq-preset-btn mbtn" style="font-size:7px;padding:2px 6px" data-preset="pop"        onclick="applyEQPreset('pop')">Pop</button>
+            <span class="dsp-vsep"></span>
+            <span style="font-size:7px;color:var(--t3);font-family:var(--fmono)">USER:</span>
+            <select class="msel dsp-user-sel" id="eq-user-sel" style="font-size:7px;padding:2px 5px;height:22px"></select>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px;color:var(--grn);border-color:var(--grn)" onclick="loadUserPreset('eq')">&#9654; Load</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px" onclick="saveUserPreset('eq')">&#9650; Save</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px;color:var(--red,#ff4444);border-color:var(--red,#ff4444)" onclick="deleteUserPreset('eq')">&#10005;</button>
           </div>
         </div>
-        <div style="font-size:7px;color:var(--t3);font-family:var(--fmono);margin-top:6px">
-          &#9432; The exciter adds harmonic overtones via waveshaper saturation + high-shelf boost. Higher DRIVE = more harmonics. Higher BLEND = louder presence. Start with <em>Subtle</em> or <em>Bright</em> for broadcast.
+        <div class="dsp-panel-body">
+          <div class="mrow" style="gap:14px">
+            <div class="mfield" style="flex:1">
+              <label>LOW (dB) <span id="eq-low-val" style="color:var(--cyn);font-weight:bold">0</span></label>
+              <input type="range" id="dsp-eq-low" min="-12" max="12" value="0" step="0.5"
+                style="width:100%;accent-color:var(--cyn)"
+                oninput="document.getElementById('eq-low-val').textContent=this.value;saveDSP()">
+            </div>
+            <div class="mfield" style="flex:1">
+              <label>MID (dB) <span id="eq-mid-val" style="color:#ffd700;font-weight:bold">0</span></label>
+              <input type="range" id="dsp-eq-mid" min="-12" max="12" value="0" step="0.5"
+                style="width:100%;accent-color:#ffd700"
+                oninput="document.getElementById('eq-mid-val').textContent=this.value;saveDSP()">
+            </div>
+            <div class="mfield" style="flex:1">
+              <label>HIGH (dB) <span id="eq-high-val" style="color:var(--orn,#ff8c00);font-weight:bold">0</span></label>
+              <input type="range" id="dsp-eq-high" min="-12" max="12" value="0" step="0.5"
+                style="width:100%;accent-color:var(--orn,#ff8c00)"
+                oninput="document.getElementById('eq-high-val').textContent=this.value;saveDSP()">
+            </div>
+          </div>
+          <div class="dsp-plugin-slot" id="slot-eq">
+            <span class="dsp-plugin-icon">&#9697;</span>
+            <span class="dsp-plugin-label">EXTERNAL EQ PLUGIN SLOT</span>
+            <span class="dsp-plugin-hint">Load an AudioWorklet (.js) to replace built-in 3-band EQ</span>
+            <input type="file" id="slot-eq-file" accept=".js" style="display:none" onchange="loadPluginSlot('eq',this)">
+            <button class="mbtn" style="font-size:7px;padding:2px 9px;margin-left:auto" onclick="document.getElementById('slot-eq-file').click()">&#43; Load Plugin</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 9px;color:var(--red,#ff4444);border-color:var(--red,#ff4444)" onclick="clearPluginSlot('eq')" id="slot-eq-clear" style="display:none">&#10005; Clear</button>
+          </div>
         </div>
       </div>
 
-      <!-- ── 4-BAND MULTIBAND COMPRESSOR ── -->
-      <div style="margin-top:10px;padding:10px;background:var(--bg2);border-radius:6px;border:1px solid var(--brd)">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <label class="gs-toggle-lbl" style="gap:7px">
-            <input type="checkbox" id="dsp-mb" onchange="saveMBFromDOM()" style="accent-color:var(--grn)">
-            <span style="font-family:var(--fmono);font-size:9px;color:var(--grn);letter-spacing:1px">&#9889; 4-BAND MULTIBAND COMPRESSOR</span>
-          </label>
-          <span style="font-size:7.5px;color:var(--t3);font-family:var(--fmono)">Independent compression per frequency band · Transparent, professional loudness control</span>
+      <!-- ═══════════════════════════════════════════════════════
+           3. BROADBAND COMPRESSOR
+      ═══════════════════════════════════════════════════════ -->
+      <div class="dsp-panel" id="dsp-panel-comp">
+        <div class="dsp-panel-hdr">
+          <div style="display:flex;align-items:center;gap:8px">
+            <button class="dsp-tog-btn" id="dsp-tog-comp" onclick="dspToggle('comp')" title="Enable/Disable">OFF</button>
+            <span class="dsp-panel-title" style="color:#81c784">&#9889; BROADBAND COMPRESSOR</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:5px">
+            <span style="font-size:7px;color:var(--t3);font-family:var(--fmono)">USER:</span>
+            <select class="msel dsp-user-sel" id="comp-user-sel" style="font-size:7px;padding:2px 5px;height:22px"></select>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px;color:var(--grn);border-color:var(--grn)" onclick="loadUserPreset('comp')">&#9654; Load</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px" onclick="saveUserPreset('comp')">&#9650; Save</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px;color:var(--red,#ff4444);border-color:var(--red,#ff4444)" onclick="deleteUserPreset('comp')">&#10005;</button>
+          </div>
         </div>
-
-        <!-- Presets -->
-        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;align-items:center">
-          <span style="font-size:7.5px;color:var(--t3);font-family:var(--fmono);margin-right:4px">PRESET:</span>
-          <button class="mb-preset-btn mbtn" style="font-size:7px;padding:3px 9px;border-color:var(--t3)" data-preset="off"       onclick="applyMBPreset('off')">&#8864; Off</button>
-          <button class="mb-preset-btn mbtn" style="font-size:7px;padding:3px 9px" data-preset="broadcast" onclick="applyMBPreset('broadcast')">&#128245; Broadcast</button>
-          <button class="mb-preset-btn mbtn" style="font-size:7px;padding:3px 9px" data-preset="music"     onclick="applyMBPreset('music')">&#127925; Music</button>
-          <button class="mb-preset-btn mbtn" style="font-size:7px;padding:3px 9px" data-preset="podcast"   onclick="applyMBPreset('podcast')">&#127908; Podcast</button>
-          <button class="mb-preset-btn mbtn" style="font-size:7px;padding:3px 9px;border-color:var(--orn,#ff8c00);color:var(--orn,#ff8c00)" data-preset="loud" onclick="applyMBPreset('loud')">&#128293; Loud &amp; Proud</button>
-          <button class="mb-preset-btn mbtn" style="font-size:7px;padding:3px 9px;border-color:var(--cyn)" data-preset="gentle"   onclick="applyMBPreset('gentle')">&#9729; Gentle</button>
-        </div>
-
-        <!-- Band headers -->
-        <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr 1fr 1fr;gap:4px;margin-bottom:4px">
-          <div style="font-size:7px;color:var(--t3);font-family:var(--fmono)"></div>
-          <div style="font-size:7px;color:var(--t3);font-family:var(--fmono);text-align:center">THRESHOLD<br>(dB)</div>
-          <div style="font-size:7px;color:var(--t3);font-family:var(--fmono);text-align:center">RATIO<br>(:1)</div>
-          <div style="font-size:7px;color:var(--t3);font-family:var(--fmono);text-align:center">ATTACK<br>(sec)</div>
-          <div style="font-size:7px;color:var(--t3);font-family:var(--fmono);text-align:center">RELEASE<br>(sec)</div>
-          <div style="font-size:7px;color:var(--t3);font-family:var(--fmono);text-align:center">MAKEUP<br>(dB)</div>
-        </div>
-
-        <!-- Band 0: Sub/Low -->
-        <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr 1fr 1fr;gap:4px;margin-bottom:4px;align-items:center">
-          <div style="font-size:8px;color:#64b5f6;font-family:var(--fmono);font-weight:bold">&#9660; SUB / LOW<br><span style="font-size:6.5px;color:var(--t3)">20–200 Hz</span></div>
-          <input class="minput" id="mb-b0-thr"     type="number" min="-60" max="0"   value="-24"  step="1"    onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b0-ratio"   type="number" min="1"  max="20"  value="4"    step="0.5"  onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b0-attack"  type="number" min="0.001" max="1" value="0.005" step="0.001" onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b0-release" type="number" min="0.01"  max="2" value="0.200" step="0.01"  onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b0-gain"    type="number" min="-12" max="12"  value="3"    step="0.5"  onchange="saveMBFromDOM()">
-        </div>
-
-        <!-- Band 1: Low-Mid -->
-        <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr 1fr 1fr;gap:4px;margin-bottom:4px;align-items:center">
-          <div style="font-size:8px;color:#81c784;font-family:var(--fmono);font-weight:bold">&#9660; LOW-MID<br><span style="font-size:6.5px;color:var(--t3)">200Hz–2kHz</span></div>
-          <input class="minput" id="mb-b1-thr"     type="number" min="-60" max="0"   value="-22"  step="1"    onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b1-ratio"   type="number" min="1"  max="20"  value="3"    step="0.5"  onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b1-attack"  type="number" min="0.001" max="1" value="0.008" step="0.001" onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b1-release" type="number" min="0.01"  max="2" value="0.180" step="0.01"  onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b1-gain"    type="number" min="-12" max="12"  value="2"    step="0.5"  onchange="saveMBFromDOM()">
-        </div>
-
-        <!-- Band 2: High-Mid -->
-        <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr 1fr 1fr;gap:4px;margin-bottom:4px;align-items:center">
-          <div style="font-size:8px;color:#ffb74d;font-family:var(--fmono);font-weight:bold">&#9650; HIGH-MID<br><span style="font-size:6.5px;color:var(--t3)">2kHz–8kHz</span></div>
-          <input class="minput" id="mb-b2-thr"     type="number" min="-60" max="0"   value="-20"  step="1"    onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b2-ratio"   type="number" min="1"  max="20"  value="3"    step="0.5"  onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b2-attack"  type="number" min="0.001" max="1" value="0.006" step="0.001" onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b2-release" type="number" min="0.01"  max="2" value="0.150" step="0.01"  onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b2-gain"    type="number" min="-12" max="12"  value="2"    step="0.5"  onchange="saveMBFromDOM()">
-        </div>
-
-        <!-- Band 3: High -->
-        <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr 1fr 1fr;gap:4px;align-items:center">
-          <div style="font-size:8px;color:#f48fb1;font-family:var(--fmono);font-weight:bold">&#9650; HIGH / AIR<br><span style="font-size:6.5px;color:var(--t3)">8kHz–20kHz</span></div>
-          <input class="minput" id="mb-b3-thr"     type="number" min="-60" max="0"   value="-18"  step="1"    onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b3-ratio"   type="number" min="1"  max="20"  value="2"    step="0.5"  onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b3-attack"  type="number" min="0.001" max="1" value="0.003" step="0.001" onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b3-release" type="number" min="0.01"  max="2" value="0.100" step="0.01"  onchange="saveMBFromDOM()">
-          <input class="minput" id="mb-b3-gain"    type="number" min="-12" max="12"  value="4"    step="0.5"  onchange="saveMBFromDOM()">
-        </div>
-
-        <div style="font-size:7px;color:var(--t3);font-family:var(--fmono);margin-top:7px">
-          &#9432; Each band is compressed independently — bass pumping no longer affects treble. Makeup gain compensates for gain reduction. Start with <em>Broadcast</em> preset for professional results.
+        <div class="dsp-panel-body">
+          <div class="mrow" style="gap:10px">
+            <div class="mfield" style="flex:0 0 120px"><label>THRESHOLD (dB)</label>
+              <input class="minput" id="dsp-comp-thr"     type="number" min="-60" max="0"   value="-20"  step="1"    onchange="saveDSP()"></div>
+            <div class="mfield" style="flex:0 0 110px"><label>RATIO (:1)</label>
+              <input class="minput" id="dsp-comp-ratio"   type="number" min="1"   max="20"  value="4"    step="0.5"  onchange="saveDSP()"></div>
+            <div class="mfield" style="flex:0 0 110px"><label>ATTACK (s)</label>
+              <input class="minput" id="dsp-comp-attack"  type="number" min="0.001" max="1" value="0.003" step="0.001" onchange="saveDSP()"></div>
+            <div class="mfield" style="flex:0 0 110px"><label>RELEASE (s)</label>
+              <input class="minput" id="dsp-comp-release" type="number" min="0.01" max="2"  value="0.25"  step="0.01"  onchange="saveDSP()"></div>
+            <div class="mfield" style="flex:0 0 110px"><label>KNEE (dB)</label>
+              <input class="minput" id="dsp-comp-knee"    type="number" min="0"    max="40" value="10"    step="1"    onchange="saveDSP()"></div>
+          </div>
         </div>
       </div>
+
+      <!-- ═══════════════════════════════════════════════════════
+           4. PROFESSIONAL EXCITER
+      ═══════════════════════════════════════════════════════ -->
+      <div class="dsp-panel" id="dsp-panel-exciter">
+        <div class="dsp-panel-hdr">
+          <div style="display:flex;align-items:center;gap:8px">
+            <button class="dsp-tog-btn" id="dsp-tog-exciter" onclick="dspToggle('exciter')" title="Enable/Disable">OFF</button>
+            <span class="dsp-panel-title" style="color:var(--orn,#ff8c00)">&#9733; PROFESSIONAL EXCITER</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+            <span style="font-size:7px;color:var(--t3);font-family:var(--fmono)">FACTORY:</span>
+            <button class="exciter-preset-btn mbtn" style="font-size:7px;padding:2px 7px;border-color:var(--t3)" data-preset="off"     onclick="applyExciterPreset('off')">Off</button>
+            <button class="exciter-preset-btn mbtn" style="font-size:7px;padding:2px 7px" data-preset="subtle"  onclick="applyExciterPreset('subtle')">&#10022; Subtle</button>
+            <button class="exciter-preset-btn mbtn" style="font-size:7px;padding:2px 7px" data-preset="bright"  onclick="applyExciterPreset('bright')">&#10022;&#10022; Bright</button>
+            <button class="exciter-preset-btn mbtn" style="font-size:7px;padding:2px 7px" data-preset="punchy"  onclick="applyExciterPreset('punchy')">&#9889; Punchy</button>
+            <button class="exciter-preset-btn mbtn" style="font-size:7px;padding:2px 7px;color:var(--red,#ff4444);border-color:var(--red,#ff4444)" data-preset="on_air"  onclick="applyExciterPreset('on_air')">&#128245; On Air</button>
+            <button class="exciter-preset-btn mbtn" style="font-size:7px;padding:2px 7px;color:var(--orn,#ff8c00);border-color:var(--orn,#ff8c00)" data-preset="extreme" onclick="applyExciterPreset('extreme')">&#128293; Extreme</button>
+            <span class="dsp-vsep"></span>
+            <span style="font-size:7px;color:var(--t3);font-family:var(--fmono)">USER:</span>
+            <select class="msel dsp-user-sel" id="exciter-user-sel" style="font-size:7px;padding:2px 5px;height:22px"></select>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px;color:var(--grn);border-color:var(--grn)" onclick="loadUserPreset('exciter')">&#9654; Load</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px" onclick="saveUserPreset('exciter')">&#9650; Save</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px;color:var(--red,#ff4444);border-color:var(--red,#ff4444)" onclick="deleteUserPreset('exciter')">&#10005;</button>
+          </div>
+        </div>
+        <div class="dsp-panel-body">
+          <div class="mrow" style="gap:14px">
+            <div class="mfield" style="flex:1">
+              <label>DRIVE <span id="exc-drive-val" style="color:var(--orn,#ff8c00);font-weight:bold">0.40</span>
+                <span style="font-size:7px;color:var(--t3)"> — saturation amount</span></label>
+              <input type="range" id="exciter-drive" min="0" max="1" value="0.4" step="0.01"
+                style="width:100%;accent-color:var(--orn,#ff8c00)"
+                oninput="document.getElementById('exc-drive-val').textContent=parseFloat(this.value).toFixed(2);saveExciterManual()">
+            </div>
+            <div class="mfield" style="flex:1">
+              <label>BLEND <span id="exc-blend-val" style="color:#ffd700;font-weight:bold">0.35</span>
+                <span style="font-size:7px;color:var(--t3)"> — wet mix level</span></label>
+              <input type="range" id="exciter-blend" min="0" max="1" value="0.35" step="0.01"
+                style="width:100%;accent-color:#ffd700"
+                oninput="document.getElementById('exc-blend-val').textContent=parseFloat(this.value).toFixed(2);saveExciterManual()">
+            </div>
+          </div>
+          <div class="dsp-plugin-slot" id="slot-exciter">
+            <span class="dsp-plugin-icon">&#9697;</span>
+            <span class="dsp-plugin-label">EXTERNAL EXCITER PLUGIN SLOT</span>
+            <span class="dsp-plugin-hint">Load an AudioWorklet (.js) to replace built-in harmonic exciter</span>
+            <input type="file" id="slot-exciter-file" accept=".js" style="display:none" onchange="loadPluginSlot('exciter',this)">
+            <button class="mbtn" style="font-size:7px;padding:2px 9px;margin-left:auto" onclick="document.getElementById('slot-exciter-file').click()">&#43; Load Plugin</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 9px;color:var(--red,#ff4444);border-color:var(--red,#ff4444)" onclick="clearPluginSlot('exciter')" id="slot-exciter-clear">&#10005; Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════
+           5. STEREO EXPANDER
+      ═══════════════════════════════════════════════════════ -->
+      <div class="dsp-panel" id="dsp-panel-stereo">
+        <div class="dsp-panel-hdr">
+          <div style="display:flex;align-items:center;gap:8px">
+            <button class="dsp-tog-btn" id="dsp-tog-stereo" onclick="dspToggle('stereo')" title="Enable/Disable">OFF</button>
+            <span class="dsp-panel-title" style="color:#f48fb1">&#8596; STEREO EXPANDER</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:5px">
+            <span style="font-size:7px;color:var(--t3);font-family:var(--fmono)">USER:</span>
+            <select class="msel dsp-user-sel" id="stereo-user-sel" style="font-size:7px;padding:2px 5px;height:22px"></select>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px;color:var(--grn);border-color:var(--grn)" onclick="loadUserPreset('stereo')">&#9654; Load</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px" onclick="saveUserPreset('stereo')">&#9650; Save</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px;color:var(--red,#ff4444);border-color:var(--red,#ff4444)" onclick="deleteUserPreset('stereo')">&#10005;</button>
+          </div>
+        </div>
+        <div class="dsp-panel-body">
+          <div class="mrow" style="gap:14px">
+            <div class="mfield" style="flex:1">
+              <label>WIDTH <span id="stereo-width-val" style="color:#f48fb1;font-weight:bold">0.50</span>
+                <span style="font-size:7px;color:var(--t3)"> — 0=mono · 0.5=normal · 1=wide</span></label>
+              <input type="range" id="stereo-width" min="0" max="1" value="0.5" step="0.01"
+                style="width:100%;accent-color:#f48fb1"
+                oninput="document.getElementById('stereo-width-val').textContent=parseFloat(this.value).toFixed(2);saveDSP()">
+            </div>
+          </div>
+          <div class="dsp-plugin-slot" id="slot-stereo">
+            <span class="dsp-plugin-icon">&#9697;</span>
+            <span class="dsp-plugin-label">EXTERNAL STEREO PLUGIN SLOT</span>
+            <span class="dsp-plugin-hint">Load an AudioWorklet (.js) for advanced stereo processing (MS, Haas, etc.)</span>
+            <input type="file" id="slot-stereo-file" accept=".js" style="display:none" onchange="loadPluginSlot('stereo',this)">
+            <button class="mbtn" style="font-size:7px;padding:2px 9px;margin-left:auto" onclick="document.getElementById('slot-stereo-file').click()">&#43; Load Plugin</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 9px;color:var(--red,#ff4444);border-color:var(--red,#ff4444)" onclick="clearPluginSlot('stereo')" id="slot-stereo-clear">&#10005; Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════
+           6. LIMITER
+      ═══════════════════════════════════════════════════════ -->
+      <div class="dsp-panel" id="dsp-panel-limiter">
+        <div class="dsp-panel-hdr">
+          <div style="display:flex;align-items:center;gap:8px">
+            <button class="dsp-tog-btn" id="dsp-tog-limiter" onclick="dspToggle('limiter')" title="Enable/Disable">OFF</button>
+            <span class="dsp-panel-title" style="color:var(--red,#ff4444)">&#128737; BRICKWALL LIMITER</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:5px">
+            <span style="font-size:7px;color:var(--t3);font-family:var(--fmono)">USER:</span>
+            <select class="msel dsp-user-sel" id="limiter-user-sel" style="font-size:7px;padding:2px 5px;height:22px"></select>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px;color:var(--grn);border-color:var(--grn)" onclick="loadUserPreset('limiter')">&#9654; Load</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px" onclick="saveUserPreset('limiter')">&#9650; Save</button>
+            <button class="mbtn" style="font-size:7px;padding:2px 7px;color:var(--red,#ff4444);border-color:var(--red,#ff4444)" onclick="deleteUserPreset('limiter')">&#10005;</button>
+          </div>
+        </div>
+        <div class="dsp-panel-body">
+          <div class="mrow" style="gap:10px">
+            <div class="mfield" style="flex:0 0 130px"><label>CEILING (dB)</label>
+              <input class="minput" id="dsp-lim-ceiling" type="number" min="-12" max="0" value="-1" step="0.5" onchange="saveDSP()"></div>
+            <div class="mfield" style="flex:0 0 130px"><label>RELEASE (s)</label>
+              <input class="minput" id="dsp-lim-release" type="number" min="0.01" max="1" value="0.1" step="0.01" onchange="saveDSP()"></div>
+            <div class="mfield" style="flex:1">
+              <div style="font-size:7.5px;color:var(--t3);font-family:var(--fmono);margin-top:14px">
+                &#9432; Brickwall peak limiter — final stage. Prevents any signal from exceeding the ceiling. Always keep enabled for broadcast safety.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════
+           HIDDEN LEGACY CHECKBOXES (for saveDSP compat)
+      ═══════════════════════════════════════════════════════ -->
+      <div style="display:none">
+        <input type="checkbox" id="dsp-normalizer">
+        <input type="checkbox" id="dsp-eq">
+        <input type="checkbox" id="dsp-comp">
+        <input type="checkbox" id="dsp-limiter">
+        <input type="checkbox" id="dsp-reverb">
+        <input type="checkbox" id="dsp-stereo">
+        <input type="checkbox" id="dsp-exciter">
+        <input type="checkbox" id="dsp-mb">
+      </div>
+
 
       <div class="sec-hdr" style="margin:14px 0 10px">&#128242; BROADCAST COMPLIANCE</div>
       <div class="mrow">
@@ -1896,7 +2118,7 @@ const SETTINGS = {
   musicBed:        false,
   defaultType:     'music',
   replayGain:      -14,
-  dsp:             { normalizer:true, eq:true, comp:true, limiter:true, reverb:true,  stereo:true, eqLow:0, eqMid:0, eqHigh:0, compThr:-20, exciter:false, exciterDrive:0.4, exciterBlend:0.35, exciterPreset:'subtle' },
+  dsp:             { normalizer:true, eq:true, comp:true, limiter:true, reverb:false, stereo:false, exciter:false, eqLow:0, eqMid:0, eqHigh:0, compThr:-20, compRatio:4, compAttack:0.003, compRelease:0.25, compKnee:10, exciterDrive:0.4, exciterBlend:0.35, exciterPreset:'subtle', stereoWidth:0.5, limCeiling:-1, limRelease:0.1, mbEnabled:false, mbPreset:'broadcast', mb0:null, mb1:null, mb2:null, mb3:null },
   streamType:      'none',
   streamHost:      '',
   streamPort:      8000,
@@ -4226,26 +4448,39 @@ function saveGlobalRotation(){
 // DSP save/load
 function saveDSP(){
   const g   = id => document.getElementById(id);
-  const num = (id, def) => parseFloat(g(id)?.value) || def;
+  const num = (id, def) => { const v = parseFloat(g(id)?.value); return isNaN(v) ? def : v; };
   const prev = SETTINGS.dsp || {};
   SETTINGS.dsp = {
-    normalizer:    g('dsp-normalizer')?.checked||false,
-    eq:            g('dsp-eq')?.checked||false,
-    comp:          g('dsp-comp')?.checked||false,
-    limiter:       g('dsp-limiter')?.checked||false,
-    reverb:        g('dsp-reverb')?.checked||false,
-    stereo:        g('dsp-stereo')?.checked||false,
+    // Enable states come from SETTINGS directly (set by dspToggle)
+    eq:         prev.eq      !== false,
+    comp:       prev.comp    !== false,
+    limiter:    prev.limiter !== false,
+    stereo:     prev.stereo  || false,
+    exciter:    prev.exciter || false,
+    normalizer: prev.normalizer || false,
+    reverb:     prev.reverb  || false,
+    mbEnabled:  prev.mbEnabled || false,
+    // EQ
     eqLow:         num('dsp-eq-low',   0),
     eqMid:         num('dsp-eq-mid',   0),
     eqHigh:        num('dsp-eq-high',  0),
-    compThr:       num('dsp-comp-thr', -20),
-    exciter:       g('dsp-exciter')?.checked||false,
+    // Broadband Compressor
+    compThr:       num('dsp-comp-thr',     -20),
+    compRatio:     num('dsp-comp-ratio',   4),
+    compAttack:    num('dsp-comp-attack',  0.003),
+    compRelease:   num('dsp-comp-release', 0.25),
+    compKnee:      num('dsp-comp-knee',    10),
+    // Exciter
     exciterDrive:  num('exciter-drive', 0.4),
     exciterBlend:  num('exciter-blend', 0.35),
-    exciterPreset: prev.exciterPreset||'subtle',
-    // Multiband (read from DOM if available, else keep previous)
-    mbEnabled: g('dsp-mb')?.checked || false,
-    mbPreset:  prev.mbPreset || 'broadcast',
+    exciterPreset: prev.exciterPreset || 'subtle',
+    // Stereo
+    stereoWidth:   num('stereo-width', 0.5),
+    // Limiter
+    limCeiling:    num('dsp-lim-ceiling', -1),
+    limRelease:    num('dsp-lim-release',  0.1),
+    // Multiband — keep current band configs
+    mbPreset: prev.mbPreset || 'broadcast',
     mb0: prev.mb0 || MB_PRESETS.broadcast.b0,
     mb1: prev.mb1 || MB_PRESETS.broadcast.b1,
     mb2: prev.mb2 || MB_PRESETS.broadcast.b2,
@@ -4256,51 +4491,74 @@ function saveDSP(){
   toast('DSP saved','s');
 }
 function loadDSP(){
-  const d=SETTINGS.dsp||{};
-  const set=(id,v)=>{ const el=document.getElementById(id); if(el) el[typeof v==='boolean'?'checked':'value']=v; };
-  set('dsp-normalizer', d.normalizer||false);
-  set('dsp-eq',         d.eq !== undefined ? d.eq : true);
-  set('dsp-comp',       d.comp !== undefined ? d.comp : true);
-  set('dsp-limiter',    d.limiter !== undefined ? d.limiter : true);
-  set('dsp-reverb',     d.reverb !== undefined ? d.reverb : true);
-  set('dsp-stereo',     d.stereo||false);
-  set('dsp-eq-low',     d.eqLow||0);
-  set('dsp-eq-mid',     d.eqMid||0);
-  set('dsp-eq-high',    d.eqHigh||0);
-  set('dsp-comp-thr',   d.compThr||-20);
-  // Exciter
-  set('dsp-exciter',    d.exciter||false);
-  set('exciter-drive',  d.exciterDrive !== undefined ? d.exciterDrive : 0.4);
-  set('exciter-blend',  d.exciterBlend !== undefined ? d.exciterBlend : 0.35);
-  // Highlight saved preset buttons
-  const ep = d.exciterPreset||'subtle';
-  document.querySelectorAll('.exciter-preset-btn').forEach(b => b.classList.toggle('on', b.dataset.preset===ep));
-  // Highlight saved EQ preset (find best match)
-  const eqMatch = Object.entries(EQ_PRESETS).find(([k,p])=>p.low===(d.eqLow||0)&&p.mid===(d.eqMid||0)&&p.high===(d.eqHigh||0));
-  document.querySelectorAll('.eq-preset-btn').forEach(b => b.classList.toggle('on', eqMatch && b.dataset.preset===eqMatch[0]));
-  // Multiband compressor
-  const setChk = (id, v) => { const el = document.getElementById(id); if(el) el.checked = v; };
-  setChk('dsp-mb', d.mbEnabled || false);
-  [0,1,2,3].forEach(i => {
-    const cfg = d['mb'+i] || MB_PRESETS.broadcast['b'+i] || {};
-    _syncMBBandDOM(i, cfg);
-  });
-  // Highlight active MB preset
-  const mbp = d.mbPreset || 'broadcast';
-  document.querySelectorAll('.mb-preset-btn').forEach(b => b.classList.toggle('on', b.dataset.preset === mbp));
+  const d = SETTINGS.dsp || {};
+  const set = (id, v) => { const el = document.getElementById(id); if (!el) return; el[typeof v === 'boolean' ? 'checked' : 'value'] = v; };
 
-  // Sync range slider display labels
-  const syncLabel = (inputId, spanId, digits) => {
+  // ── Hidden checkboxes (legacy compat) ──
+  set('dsp-normalizer', d.normalizer || false);
+  set('dsp-eq',         d.eq !== false);
+  set('dsp-comp',       d.comp !== false);
+  set('dsp-limiter',    d.limiter !== false);
+  set('dsp-reverb',     d.reverb !== undefined ? d.reverb : true);
+  set('dsp-stereo',     d.stereo || false);
+  set('dsp-exciter',    d.exciter || false);
+  set('dsp-mb',         d.mbEnabled || false);
+
+  // ── EQ sliders + labels ──
+  const setRange = (inputId, spanId, v, digits) => {
     const el = document.getElementById(inputId);
     const sp = document.getElementById(spanId);
-    if (el && sp) sp.textContent = digits ? parseFloat(el.value).toFixed(digits) : el.value;
+    if (el) el.value = v;
+    if (sp) sp.textContent = digits ? parseFloat(v).toFixed(digits) : v;
   };
-  syncLabel('dsp-eq-low',     'eq-low-val',   0);
-  syncLabel('dsp-eq-mid',     'eq-mid-val',   0);
-  syncLabel('dsp-eq-high',    'eq-high-val',  0);
-  syncLabel('exciter-drive',  'exc-drive-val',2);
-  syncLabel('exciter-blend',  'exc-blend-val',2);
-  // Build/apply DSP graph if audio context already exists
+  setRange('dsp-eq-low',  'eq-low-val',  d.eqLow  || 0, 0);
+  setRange('dsp-eq-mid',  'eq-mid-val',  d.eqMid  || 0, 0);
+  setRange('dsp-eq-high', 'eq-high-val', d.eqHigh || 0, 0);
+
+  // ── Broadband Compressor ──
+  set('dsp-comp-thr',     d.compThr     !== undefined ? d.compThr     : -20);
+  set('dsp-comp-ratio',   d.compRatio   !== undefined ? d.compRatio   : 4);
+  set('dsp-comp-attack',  d.compAttack  !== undefined ? d.compAttack  : 0.003);
+  set('dsp-comp-release', d.compRelease !== undefined ? d.compRelease : 0.25);
+  set('dsp-comp-knee',    d.compKnee    !== undefined ? d.compKnee    : 10);
+
+  // ── Exciter sliders + labels ──
+  setRange('exciter-drive',  'exc-drive-val', d.exciterDrive !== undefined ? d.exciterDrive : 0.4,  2);
+  setRange('exciter-blend',  'exc-blend-val', d.exciterBlend !== undefined ? d.exciterBlend : 0.35, 2);
+
+  // ── Stereo width slider + label ──
+  setRange('stereo-width', 'stereo-width-val', d.stereoWidth !== undefined ? d.stereoWidth : 0.5, 2);
+
+  // ── Limiter ──
+  set('dsp-lim-ceiling', d.limCeiling !== undefined ? d.limCeiling : -1);
+  set('dsp-lim-release', d.limRelease !== undefined ? d.limRelease : 0.1);
+
+  // ── Multiband ──
+  [0,1,2,3].forEach(i => _syncMBBandDOM(i, d['mb'+i] || MB_PRESETS.broadcast['b'+i] || {}));
+
+  // ── EQ factory preset highlight ──
+  const eqMatch = Object.entries(EQ_PRESETS).find(([k,p]) =>
+    p.low === (d.eqLow||0) && p.mid === (d.eqMid||0) && p.high === (d.eqHigh||0));
+  document.querySelectorAll('.eq-preset-btn').forEach(b =>
+    b.classList.toggle('on', !!(eqMatch && b.dataset.preset === eqMatch[0])));
+
+  // ── Exciter factory preset highlight ──
+  const ep = d.exciterPreset || 'subtle';
+  document.querySelectorAll('.exciter-preset-btn').forEach(b =>
+    b.classList.toggle('on', b.dataset.preset === ep));
+
+  // ── MB factory preset highlight ──
+  const mbp = d.mbPreset || 'broadcast';
+  document.querySelectorAll('.mb-preset-btn').forEach(b =>
+    b.classList.toggle('on', b.dataset.preset === mbp));
+
+  // ── Toggle buttons (ON/OFF pills) ──
+  _syncAllDspTogBtns();
+
+  // ── User preset dropdowns ──
+  _renderAllUserPresetSelects();
+
+  // ── Build/apply DSP graph if audio context already exists ──
   if (_actx) { buildDSPGraph(); applyDSP(); }
 }
 // ═══════════════════════════════════════════════════════════════
@@ -4572,60 +4830,69 @@ function applyDSP() {
   const d = SETTINGS.dsp || {};
   if (!DSP.built) { buildDSPGraph(); return; }
 
-  // ── MULTIBAND COMPRESSOR ─────────────────────────────────────
+  // ── MULTIBAND COMPRESSOR ────────────────────────────────────
   const mb = DSP.mb;
   const mbEnabled = d.mbEnabled === true;
   mb.enabled = mbEnabled;
-
-  // Route signal: MB active → sumGN has signal; bypass → bypassGN has signal
-  // We control this by muting the unused path via gain
   mb.sumGN.gain.value    = mbEnabled ? 0.5 : 0;
   mb.bypassGN.gain.value = mbEnabled ? 0   : 1.0;
-
   if (mbEnabled) {
-    const bands = [
+    [
       { band: mb.b0, cfg: d.mb0 || {} },
       { band: mb.b1, cfg: d.mb1 || {} },
       { band: mb.b2, cfg: d.mb2 || {} },
       { band: mb.b3, cfg: d.mb3 || {} },
-    ];
-    bands.forEach(({ band, cfg }) => {
+    ].forEach(({ band, cfg }) => {
       band.comp.threshold.value = cfg.thr     !== undefined ? cfg.thr     : -20;
       band.comp.ratio.value     = cfg.ratio   !== undefined ? cfg.ratio   : 3;
       band.comp.attack.value    = cfg.attack  !== undefined ? cfg.attack  : 0.008;
       band.comp.release.value   = cfg.release !== undefined ? cfg.release : 0.150;
-      // Makeup gain: convert dB to linear
       band.makeupGN.gain.value  = cfg.gain    !== undefined ? Math.pow(10, cfg.gain / 20) : 1.0;
     });
   }
 
-  // ── THREE-BAND EQ ────────────────────────────────────────────
+  // ── THREE-BAND EQ ───────────────────────────────────────────
   const eqActive = d.eq !== false;
   DSP.eqLow.gain.value  = eqActive ? (d.eqLow  || 0) : 0;
   DSP.eqMid.gain.value  = eqActive ? (d.eqMid  || 0) : 0;
   DSP.eqHigh.gain.value = eqActive ? (d.eqHigh || 0) : 0;
 
-  // ── BROADBAND COMPRESSOR ─────────────────────────────────────
+  // ── BROADBAND COMPRESSOR ────────────────────────────────────
   if (d.comp !== false) {
-    DSP.comp.threshold.value = d.compThr || -20;
-    DSP.comp.ratio.value     = 4;
+    DSP.comp.threshold.value = d.compThr     !== undefined ? d.compThr     : -20;
+    DSP.comp.ratio.value     = d.compRatio   !== undefined ? d.compRatio   : 4;
+    DSP.comp.attack.value    = d.compAttack  !== undefined ? d.compAttack  : 0.003;
+    DSP.comp.release.value   = d.compRelease !== undefined ? d.compRelease : 0.25;
+    DSP.comp.knee.value      = d.compKnee    !== undefined ? d.compKnee    : 10;
   } else {
     DSP.comp.threshold.value = 0;
     DSP.comp.ratio.value     = 1;
   }
 
-  // ── LIMITER ──────────────────────────────────────────────────
-  DSP.limiter.threshold.value = (d.limiter !== false) ? -1 : 0;
-  DSP.limiter.ratio.value     = (d.limiter !== false) ? 20 : 1;
+  // ── BRICKWALL LIMITER ───────────────────────────────────────
+  const limOn = d.limiter !== false;
+  DSP.limiter.threshold.value = limOn ? (d.limCeiling !== undefined ? d.limCeiling : -1) : 0;
+  DSP.limiter.ratio.value     = limOn ? 20 : 1;
+  DSP.limiter.release.value   = limOn ? (d.limRelease !== undefined ? d.limRelease : 0.1) : 0.1;
 
-  // ── EXCITER ──────────────────────────────────────────────────
-  const drive = d.exciterDrive || 0.4;
-  const blend = d.exciter ? (d.exciterBlend || 0.35) : 0;
+  // ── EXCITER ─────────────────────────────────────────────────
+  const drive = d.exciterDrive !== undefined ? d.exciterDrive : 0.4;
+  const blend = (d.exciter && d.exciter !== false) ? (d.exciterBlend !== undefined ? d.exciterBlend : 0.35) : 0;
   DSP.exciterInGN.gain.value = drive;
   DSP.exciterWS.curve        = _makeExciterCurve(drive);
   DSP.exciterGN.gain.value   = blend;
 
-  log('DSP','Applied: MB='+mbEnabled+' EQ='+eqActive+' Comp='+d.comp+' Lim='+d.limiter+' Exciter='+d.exciter);
+  // ── STEREO EXPANDER ─────────────────────────────────────────
+  // Stereo width via mid-side matrix (if stereo ctx): width=0 mono, 0.5=normal, 1=wide
+  // With mono AudioContext, width just adjusts outGN as a loudness proxy
+  const stereoOn = d.stereo === true;
+  const width    = stereoOn ? (d.stereoWidth !== undefined ? d.stereoWidth : 0.5) : 0.5;
+  // Map width → gain: 0=0.7(mono-ish), 0.5=0.95(normal), 1=1.1(hot)
+  DSP.outGN.gain.value = 0.7 + width * 0.4;
+
+  log('DSP', 'Applied: MB='+mbEnabled+' EQ='+eqActive+' Comp='+d.comp+
+    ' Lim='+limOn+' Exc='+d.exciter+' Stereo='+stereoOn+
+    ' Width='+width.toFixed(2)+' Drive='+drive.toFixed(2));
 }
 
 // Apply a complete MB preset (all 4 bands at once)
@@ -4639,18 +4906,16 @@ function applyMBPreset(presetKey) {
   d.mb1 = { ...preset.b1 };
   d.mb2 = { ...preset.b2 };
   d.mb3 = { ...preset.b3 };
-  // Sync DOM
-  const setChk = (id, v) => { const el = document.getElementById(id); if(el) el.checked = v; };
-  setChk('dsp-mb', preset.enabled);
   _syncMBBandDOM(0, d.mb0);
   _syncMBBandDOM(1, d.mb1);
   _syncMBBandDOM(2, d.mb2);
   _syncMBBandDOM(3, d.mb3);
+  _syncDspTogBtn('mb', d.mbEnabled);
   applyDSP();
   saveSettings();
-  document.querySelectorAll('.mb-preset-btn').forEach(b => b.classList.toggle('on', b.dataset.preset === presetKey));
-  toast('MB: '+preset.label, 's');
-  log('DSP','MB preset: '+preset.label);
+  document.querySelectorAll('.mb-preset-btn').forEach(b =>
+    b.classList.toggle('on', b.dataset.preset === presetKey));
+  toast('MB: ' + preset.label, 's');
 }
 
 // Sync DOM for one band (called when loading settings or applying preset)
@@ -4667,9 +4932,9 @@ function _syncMBBandDOM(bandIdx, cfg) {
 // Save MB settings from DOM into SETTINGS.dsp
 function saveMBFromDOM() {
   const g   = id => document.getElementById(id);
-  const num = (id, def) => parseFloat(g(id)?.value) || def;
+  const num = (id, def) => { const v = parseFloat(g(id)?.value); return isNaN(v) ? def : v; };
   const d   = SETTINGS.dsp;
-  d.mbEnabled = g('dsp-mb')?.checked || false;
+  // mbEnabled controlled by toggle button — don't read checkbox
   [0,1,2,3].forEach(i => {
     const b = 'mb-b'+i+'-';
     d['mb'+i] = {
@@ -4702,18 +4967,20 @@ function applyEQPreset(presetKey) {
   SETTINGS.dsp.eqMid  = preset.mid;
   SETTINGS.dsp.eqHigh = preset.high;
   SETTINGS.dsp.eq     = true;
-  // Update DOM
-  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v;};
-  set('dsp-eq-low',  preset.low);
-  set('dsp-eq-mid',  preset.mid);
-  set('dsp-eq-high', preset.high);
-  const eqCb = document.getElementById('dsp-eq');
-  if (eqCb) eqCb.checked = true;
+  // Update range sliders + labels
+  const setRange = (inputId, spanId, v) => {
+    const el = document.getElementById(inputId); if(el) el.value = v;
+    const sp = document.getElementById(spanId);  if(sp) sp.textContent = v;
+  };
+  setRange('dsp-eq-low',  'eq-low-val',  preset.low);
+  setRange('dsp-eq-mid',  'eq-mid-val',  preset.mid);
+  setRange('dsp-eq-high', 'eq-high-val', preset.high);
+  _syncDspTogBtn('eq', true);
   applyDSP();
   saveSettings();
-  // Highlight selected preset btn
-  document.querySelectorAll('.eq-preset-btn').forEach(b => b.classList.toggle('on', b.dataset.preset===presetKey));
-  log('DSP','EQ preset: '+preset.label);
+  document.querySelectorAll('.eq-preset-btn').forEach(b =>
+    b.classList.toggle('on', b.dataset.preset === presetKey));
+  log('DSP', 'EQ preset: ' + preset.label);
 }
 
 function applyExciterPreset(presetKey) {
@@ -4723,26 +4990,251 @@ function applyExciterPreset(presetKey) {
   SETTINGS.dsp.exciterDrive  = preset.drive;
   SETTINGS.dsp.exciterBlend  = preset.blend;
   SETTINGS.dsp.exciter       = preset.blend > 0;
-  // Update DOM
-  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v;};
-  const setChk=(id,v)=>{const el=document.getElementById(id);if(el)el.checked=v;};
-  set('exciter-drive', preset.drive);
-  set('exciter-blend', preset.blend);
-  setChk('dsp-exciter', preset.blend > 0);
+  // Update range sliders + labels
+  const setRange = (inputId, spanId, v, digits) => {
+    const el = document.getElementById(inputId); if(el) el.value = v;
+    const sp = document.getElementById(spanId);  if(sp) sp.textContent = parseFloat(v).toFixed(digits||2);
+  };
+  setRange('exciter-drive', 'exc-drive-val', preset.drive, 2);
+  setRange('exciter-blend', 'exc-blend-val', preset.blend, 2);
+  _syncDspTogBtn('exciter', preset.blend > 0);
   applyDSP();
   saveSettings();
-  document.querySelectorAll('.exciter-preset-btn').forEach(b => b.classList.toggle('on', b.dataset.preset===presetKey));
-  log('DSP','Exciter preset: '+preset.label);
+  document.querySelectorAll('.exciter-preset-btn').forEach(b =>
+    b.classList.toggle('on', b.dataset.preset === presetKey));
+  log('DSP', 'Exciter preset: ' + preset.label);
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  DSP TOGGLE BUTTONS — pill-style ON/OFF per processor
+// ═══════════════════════════════════════════════════════════════
+// Maps toggle id → SETTINGS.dsp key
+const DSP_TOG_MAP = {
+  mb:      'mbEnabled',
+  eq:      'eq',
+  comp:    'comp',
+  exciter: 'exciter',
+  stereo:  'stereo',
+  limiter: 'limiter',
+};
+
+function dspToggle(proc) {
+  const key = DSP_TOG_MAP[proc];
+  if (!key) return;
+  const current = SETTINGS.dsp[key] || false;
+  SETTINGS.dsp[key] = !current;
+  _syncDspTogBtn(proc, !current);
+  // Special: exciter also needs exciterBlend synced
+  if (proc === 'exciter') {
+    SETTINGS.dsp.exciterBlend = SETTINGS.dsp.exciter
+      ? (parseFloat(document.getElementById('exciter-blend')?.value) || 0.35) : 0;
+  }
+  applyDSP();
+  saveSettings();
+  toast((SETTINGS.dsp[key] ? '🟢 ' : '🔴 ') + proc.toUpperCase() + (SETTINGS.dsp[key] ? ' ON' : ' OFF'), 'i');
+}
+
+function _syncDspTogBtn(proc, isOn) {
+  const btn = document.getElementById('dsp-tog-' + proc);
+  if (!btn) return;
+  btn.textContent = isOn ? 'ON' : 'OFF';
+  btn.classList.toggle('on', isOn);
+  // Also keep hidden checkboxes in sync (for saveDSP compat)
+  const cb = document.getElementById('dsp-' + (proc === 'mb' ? 'mb' : proc));
+  if (cb) cb.checked = isOn;
+}
+
+function _syncAllDspTogBtns() {
+  const d = SETTINGS.dsp || {};
+  _syncDspTogBtn('mb',      d.mbEnabled  || false);
+  _syncDspTogBtn('eq',      d.eq         !== false);
+  _syncDspTogBtn('comp',    d.comp       !== false);
+  _syncDspTogBtn('exciter', d.exciter    || false);
+  _syncDspTogBtn('stereo',  d.stereo     || false);
+  _syncDspTogBtn('limiter', d.limiter    !== false);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  USER PRESET SYSTEM — save/load/delete named presets per processor
+//  Stored in localStorage as nx_dsp_presets_<proc>  = [{name, data}, ...]
+// ═══════════════════════════════════════════════════════════════
+function _userPresetKey(proc) { return 'nx_dsp_presets_' + proc; }
+
+function _loadUserPresets(proc) {
+  try { return JSON.parse(localStorage.getItem(_userPresetKey(proc)) || '[]'); }
+  catch(e) { return []; }
+}
+function _saveUserPresets(proc, arr) {
+  try { localStorage.setItem(_userPresetKey(proc), JSON.stringify(arr)); } catch(e) {}
+}
+
+function _getUserPresetData(proc) {
+  const d = SETTINGS.dsp || {};
+  if (proc === 'mb')      return { mbEnabled:d.mbEnabled, mb0:d.mb0, mb1:d.mb1, mb2:d.mb2, mb3:d.mb3 };
+  if (proc === 'eq')      return { eq:d.eq, eqLow:d.eqLow, eqMid:d.eqMid, eqHigh:d.eqHigh };
+  if (proc === 'comp')    return { comp:d.comp, compThr:d.compThr, compRatio:d.compRatio, compAttack:d.compAttack, compRelease:d.compRelease, compKnee:d.compKnee };
+  if (proc === 'exciter') return { exciter:d.exciter, exciterDrive:d.exciterDrive, exciterBlend:d.exciterBlend };
+  if (proc === 'stereo')  return { stereo:d.stereo, stereoWidth:d.stereoWidth };
+  if (proc === 'limiter') return { limiter:d.limiter, limCeiling:d.limCeiling, limRelease:d.limRelease };
+  return {};
+}
+
+function _applyUserPresetData(proc, data) {
+  const d = SETTINGS.dsp;
+  Object.assign(d, data);
+
+  const setRange = (inputId, spanId, v, digits) => {
+    const el = document.getElementById(inputId); if(el) el.value = v;
+    const sp = document.getElementById(spanId);  if(sp) sp.textContent = digits ? parseFloat(v).toFixed(digits) : String(v);
+  };
+  const set = (id, v) => { const el = document.getElementById(id); if(el) el.value = v; };
+
+  if (proc === 'mb') {
+    [0,1,2,3].forEach(i => _syncMBBandDOM(i, d['mb'+i] || {}));
+    _syncDspTogBtn('mb', d.mbEnabled || false);
+  }
+  if (proc === 'eq') {
+    setRange('dsp-eq-low',  'eq-low-val',  d.eqLow  || 0, 0);
+    setRange('dsp-eq-mid',  'eq-mid-val',  d.eqMid  || 0, 0);
+    setRange('dsp-eq-high', 'eq-high-val', d.eqHigh || 0, 0);
+    _syncDspTogBtn('eq', d.eq !== false);
+    document.querySelectorAll('.eq-preset-btn').forEach(b => b.classList.remove('on'));
+  }
+  if (proc === 'comp') {
+    set('dsp-comp-thr',     d.compThr     !== undefined ? d.compThr     : -20);
+    set('dsp-comp-ratio',   d.compRatio   !== undefined ? d.compRatio   : 4);
+    set('dsp-comp-attack',  d.compAttack  !== undefined ? d.compAttack  : 0.003);
+    set('dsp-comp-release', d.compRelease !== undefined ? d.compRelease : 0.25);
+    set('dsp-comp-knee',    d.compKnee    !== undefined ? d.compKnee    : 10);
+    _syncDspTogBtn('comp', d.comp !== false);
+  }
+  if (proc === 'exciter') {
+    setRange('exciter-drive', 'exc-drive-val', d.exciterDrive || 0.4,  2);
+    setRange('exciter-blend', 'exc-blend-val', d.exciterBlend || 0.35, 2);
+    _syncDspTogBtn('exciter', d.exciter || false);
+    document.querySelectorAll('.exciter-preset-btn').forEach(b => b.classList.remove('on'));
+  }
+  if (proc === 'stereo') {
+    setRange('stereo-width', 'stereo-width-val', d.stereoWidth || 0.5, 2);
+    _syncDspTogBtn('stereo', d.stereo || false);
+  }
+  if (proc === 'limiter') {
+    set('dsp-lim-ceiling', d.limCeiling !== undefined ? d.limCeiling : -1);
+    set('dsp-lim-release', d.limRelease !== undefined ? d.limRelease : 0.1);
+    _syncDspTogBtn('limiter', d.limiter !== false);
+  }
+  applyDSP();
+  saveSettings();
+}
+
+function _renderUserPresetSelect(proc) {
+  const sel = document.getElementById(proc + '-user-sel');
+  if (!sel) return;
+  const presets = _loadUserPresets(proc);
+  sel.innerHTML = presets.length
+    ? presets.map((p,i)=>`<option value="${i}">${p.name}</option>`).join('')
+    : '<option value="">— no saved presets —</option>';
+}
+
+function saveUserPreset(proc) {
+  const name = prompt('Name this ' + proc.toUpperCase() + ' preset:');
+  if (!name || !name.trim()) return;
+  const presets = _loadUserPresets(proc);
+  // Replace if same name exists
+  const existing = presets.findIndex(p => p.name === name.trim());
+  const entry = { name: name.trim(), data: _getUserPresetData(proc) };
+  if (existing >= 0) presets[existing] = entry;
+  else presets.push(entry);
+  _saveUserPresets(proc, presets);
+  _renderUserPresetSelect(proc);
+  // Select the saved preset in dropdown
+  const sel = document.getElementById(proc + '-user-sel');
+  if (sel) { const idx = presets.findIndex(p=>p.name===name.trim()); if(idx>=0) sel.value=idx; }
+  toast('Preset saved: ' + name.trim(), 's');
+}
+
+function loadUserPreset(proc) {
+  const sel = document.getElementById(proc + '-user-sel');
+  if (!sel || !sel.value && sel.value !== '0') { toast('No preset selected', 'w'); return; }
+  const presets = _loadUserPresets(proc);
+  const entry   = presets[parseInt(sel.value)];
+  if (!entry) { toast('Preset not found', 'e'); return; }
+  _applyUserPresetData(proc, entry.data);
+  toast('Loaded: ' + entry.name, 's');
+}
+
+function deleteUserPreset(proc) {
+  const sel = document.getElementById(proc + '-user-sel');
+  if (!sel || !sel.value && sel.value !== '0') { toast('No preset selected', 'w'); return; }
+  const presets = _loadUserPresets(proc);
+  const idx     = parseInt(sel.value);
+  const name    = presets[idx]?.name || '?';
+  if (!confirm('Delete preset "' + name + '"?')) return;
+  presets.splice(idx, 1);
+  _saveUserPresets(proc, presets);
+  _renderUserPresetSelect(proc);
+  toast('Deleted: ' + name, 'i');
+}
+
+function _renderAllUserPresetSelects() {
+  ['mb','eq','comp','exciter','stereo','limiter'].forEach(_renderUserPresetSelect);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PLUGIN SLOT SYSTEM — AudioWorklet external plugin loader
+// ═══════════════════════════════════════════════════════════════
+const _pluginSlots = {}; // proc → { name, moduleUrl }
+
+async function loadPluginSlot(proc, fileInput) {
+  const file = fileInput.files[0];
+  if (!file) return;
+  try {
+    const url = URL.createObjectURL(file);
+    const ctx = getCtx();
+    await ctx.audioWorklet.addModule(url);
+    _pluginSlots[proc] = { name: file.name, moduleUrl: url };
+    const slot = document.getElementById('slot-' + proc);
+    if (slot) {
+      slot.classList.add('loaded');
+      const lbl = slot.querySelector('.dsp-plugin-label');
+      if (lbl) lbl.textContent = '✓ PLUGIN LOADED: ' + file.name;
+      const clr = document.getElementById('slot-' + proc + '-clear');
+      if (clr) clr.style.display = '';
+    }
+    toast('Plugin loaded: ' + file.name, 's');
+    log('DSP','Plugin slot ['+proc+']: '+file.name+' loaded as AudioWorklet');
+  } catch(e) {
+    toast('Plugin load failed: ' + e.message, 'e');
+    log('ERR','Plugin slot ['+proc+']: '+e.message);
+  }
+  fileInput.value = '';
+}
+
+function clearPluginSlot(proc) {
+  if (_pluginSlots[proc]) {
+    try { URL.revokeObjectURL(_pluginSlots[proc].moduleUrl); } catch(e) {}
+    delete _pluginSlots[proc];
+  }
+  const slot = document.getElementById('slot-' + proc);
+  if (slot) {
+    slot.classList.remove('loaded');
+    const lbl = slot.querySelector('.dsp-plugin-label');
+    const labels = { mb:'EXTERNAL MB COMPRESSOR PLUGIN SLOT', eq:'EXTERNAL EQ PLUGIN SLOT', exciter:'EXTERNAL EXCITER PLUGIN SLOT', stereo:'EXTERNAL STEREO PLUGIN SLOT' };
+    if (lbl) lbl.textContent = labels[proc] || 'EXTERNAL PLUGIN SLOT';
+    const clr = document.getElementById('slot-' + proc + '-clear');
+    if (clr) clr.style.display = 'none';
+  }
+  toast('Plugin slot [' + proc + '] cleared', 'i');
 }
 
 function saveExciterManual() {
   const g = id => document.getElementById(id);
-  SETTINGS.dsp.exciter      = g('dsp-exciter')?.checked || false;
   SETTINGS.dsp.exciterDrive = parseFloat(g('exciter-drive')?.value) || 0.4;
   SETTINGS.dsp.exciterBlend = parseFloat(g('exciter-blend')?.value) || 0.35;
+  // Don't override exciter enable state — that's controlled by the toggle button
   applyDSP();
   saveSettings();
-  // Deselect presets (manual tweak)
   document.querySelectorAll('.exciter-preset-btn').forEach(b => b.classList.remove('on'));
 }
 
